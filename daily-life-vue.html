@@ -35,8 +35,17 @@
     color: var(--ink);
     display: flex;
     justify-content: center;
+    align-items: flex-start;
     padding: 24px 16px;
     -webkit-font-smoothing: antialiased;
+  }
+
+  .app-container {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    width: 100%;
+    justify-content: center;
   }
 
   .app-wrapper {
@@ -347,7 +356,115 @@
   .slide-enter-from { opacity: 0; transform: translateY(16px); }
   .slide-leave-to { opacity: 0; transform: translateY(-16px); }
 
+  /* ---- Side Clock ---- */
+  .side-clock {
+    flex-shrink: 0;
+    position: sticky;
+    top: 24px;
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--divider);
+    text-align: center;
+    width: 170px;
+  }
+
+  .clock-face {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 3px solid var(--brown);
+    margin: 0 auto 12px;
+    position: relative;
+    background: linear-gradient(135deg, #fdfaf5, #faf5ed);
+    box-shadow: inset 0 2px 8px rgba(61,44,30,0.04);
+  }
+
+  .clock-face::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 8px; height: 8px;
+    background: var(--coral);
+    border-radius: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 5;
+    box-shadow: 0 0 4px rgba(201,123,107,0.3);
+  }
+
+  .clock-hour, .clock-min, .clock-sec {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform-origin: bottom center;
+    border-radius: 2px;
+  }
+
+  .clock-hour {
+    width: 3px;
+    height: 30px;
+    background: var(--brown);
+    margin-left: -1.5px;
+    border-radius: 3px;
+  }
+
+  .clock-min {
+    width: 2px;
+    height: 42px;
+    background: var(--brown-light);
+    margin-left: -1px;
+    border-radius: 2px;
+  }
+
+  .clock-sec {
+    width: 1px;
+    height: 50px;
+    background: var(--coral);
+    margin-left: -0.5px;
+    border-radius: 1px;
+  }
+
+  .clock-digital {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--brown);
+    letter-spacing: 1px;
+  }
+
+  .clock-date {
+    font-size: 11px;
+    color: var(--ink-light);
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  /* tick marks */
+  .clock-tick {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 1px;
+    height: 6px;
+    background: var(--brown);
+    transform-origin: 0 0;
+    opacity: 0.4;
+  }
+
+  .clock-tick.major {
+    height: 10px;
+    width: 2px;
+    opacity: 0.7;
+    margin-left: -0.5px;
+  }
+
   @media (max-width: 768px) {
+    .app-container { flex-direction: column; align-items: center; }
+    .side-clock { position: static; width: 100%; max-width: 300px; }
+    .clock-face { width: 100px; height: 100px; }
+    .clock-hour { height: 24px; }
+    .clock-min { height: 34px; }
+    .clock-sec { height: 40px; }
     .form-row { grid-template-columns: 1fr 1fr; }
     .form-row .btn-primary { grid-column: 1 / -1; }
     .summary-row { grid-template-columns: 1fr; }
@@ -359,6 +476,25 @@
 <body>
 
 <div id="app">
+  <div class="app-container">
+
+  <!-- Side Clock -->
+  <div class="side-clock">
+    <div class="clock-face">
+      <template v-for="i in 12" :key="'t'+i">
+        <div class="clock-tick major" :style="`transform: translate(-50%,-50%) rotate(${i*30}deg) translateY(-55px)`"></div>
+      </template>
+      <template v-for="i in 60" :key="'s'+i">
+        <div v-if="i % 5 !== 0" class="clock-tick" :style="`transform: translate(-50%,-50%) rotate(${i*6}deg) translateY(-55px)`"></div>
+      </template>
+      <div class="clock-hour" :style="`transform: rotate(${clockHourDeg}deg)`"></div>
+      <div class="clock-min" :style="`transform: rotate(${clockMinDeg}deg)`"></div>
+      <div class="clock-sec" :style="`transform: rotate(${clockSecDeg}deg)`"></div>
+    </div>
+    <div class="clock-digital">{{ clockDigital }}</div>
+    <div class="clock-date">{{ clockDateStr }}</div>
+  </div>
+
   <div class="app-wrapper">
     <!-- Header -->
     <div class="app-header">
@@ -532,6 +668,8 @@
     </template>
   </div>
 
+  </div><!-- /app-container -->
+
   <!-- Event Modal -->
   <Teleport to="body">
     <div v-if="showEventModal" class="modal-overlay" @click.self="closeEventModal">
@@ -588,6 +726,26 @@ createApp({
   components: { TransitionGroup, Teleport },
 
   setup() {
+    /* ============ 时钟状态 ============ */
+    const clockHourDeg = ref(0);
+    const clockMinDeg = ref(0);
+    const clockSecDeg = ref(0);
+    const clockDigital = ref('');
+    const clockDateStr = ref('');
+
+    const updateClock = () => {
+      const now = new Date();
+      const h = now.getHours();
+      const m = now.getMinutes();
+      const s = now.getSeconds();
+      clockHourDeg.value = (h % 12) * 30 + m * 0.5;
+      clockMinDeg.value = m * 6 + s * 0.1;
+      clockSecDeg.value = s * 6;
+      clockDigital.value = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      const w = ['日','一','二','三','四','五','六'];
+      clockDateStr.value = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 星期${w[now.getDay()]}`;
+    };
+
     /* ============ 共享状态 ============ */
     const activeTab = ref('bookkeeping');
     const headerDate = ref('');
@@ -790,14 +948,21 @@ createApp({
     }
 
     onMounted(() => {
+      updateClock();
       updateHeader();
-      setInterval(updateHeader, 60000);
+      setInterval(() => { updateClock(); updateHeader(); }, 1000);
       nextTick(drawPieChart);
     });
 
     return {
       activeTab,
       headerDate,
+      // clock
+      clockHourDeg,
+      clockMinDeg,
+      clockSecDeg,
+      clockDigital,
+      clockDateStr,
       // bookkeeping
       form,
       transactions,
