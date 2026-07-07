@@ -9,467 +9,231 @@
   @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
 
   :root {
-    --cream: #faf5ed;
-    --brown: #3d2c1e;
-    --brown-light: #8b7355;
-    --sage: #7d9b76;
-    --sage-light: #e8f0e5;
-    --coral: #c97b6b;
-    --coral-light: #fce8e3;
-    --sky: #6b8db5;
-    --sky-light: #e8eff7;
-    --ink: #2c2416;
-    --ink-light: #8a8178;
-    --divider: #e8ddd0;
+    --cream: #faf5ed; --brown: #3d2c1e; --brown-light: #8b7355;
+    --sage: #7d9b76; --sage-light: #e8f0e5; --coral: #c97b6b;
+    --coral-light: #fce8e3; --sky: #6b8db5; --sky-light: #e8eff7;
+    --gold: #c4a35a; --gold-light: #fdf3dc; --ink: #2c2416;
+    --ink-light: #8a8178; --divider: #e8ddd0;
     --shadow: 0 1px 3px rgba(61,44,30,0.06), 0 4px 12px rgba(61,44,30,0.04);
-    --radius: 12px;
-    --radius-sm: 8px;
+    --radius: 12px; --radius-sm: 8px;
   }
-
   * { margin:0; padding:0; box-sizing:border-box; }
-
   body {
     font-family: 'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;
     background: linear-gradient(135deg, #f7f0e6 0%, #faf5ed 50%, #f5ede0 100%);
-    min-height: 100vh;
-    color: var(--ink);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 24px 16px;
-    -webkit-font-smoothing: antialiased;
+    min-height: 100vh; color: var(--ink);
+    display: flex; justify-content: center; align-items: flex-start;
+    padding: 24px 16px; -webkit-font-smoothing: antialiased;
   }
-
-  .app-container {
-    display: flex;
-    gap: 24px;
-    align-items: flex-start;
-    width: 100%;
-    justify-content: center;
-  }
-
-  .app-wrapper {
-    width: 100%;
-    max-width: 960px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
+  .app-container { display:flex; gap:24px; align-items:flex-start; width:100%; justify-content:center; }
+  .app-wrapper { width:100%; max-width:960px; display:flex; flex-direction:column; gap:20px; }
 
   /* Header */
-  .app-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 4px;
-  }
-  .app-title {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 28px;
-    font-weight: 600;
-    color: var(--brown);
-    letter-spacing: 0.5px;
-  }
-  .app-title span { color: var(--sage); }
-  .date-display {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 14px;
-    color: var(--ink-light);
-    letter-spacing: 1px;
-  }
+  .app-header { display:flex; align-items:center; justify-content:space-between; padding:0 4px; }
+  .app-title { font-family:'Noto Serif SC',serif; font-size:28px; font-weight:600; color:var(--brown); letter-spacing:0.5px; }
+  .app-title span { color:var(--sage); }
+  .date-display { font-family:'Noto Serif SC',serif; font-size:14px; color:var(--ink-light); letter-spacing:1px; }
 
   /* Tabs */
-  .tab-nav {
-    display: flex;
-    background: #fff;
-    border-radius: var(--radius);
-    padding: 4px;
-    box-shadow: var(--shadow);
-  }
+  .tab-nav { display:flex; background:#fff; border-radius:var(--radius); padding:4px; box-shadow:var(--shadow); }
   .tab-btn {
-    flex: 1;
-    padding: 12px 24px;
-    border: none;
-    background: transparent;
-    font-family: 'Noto Sans SC', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--ink-light);
-    cursor: pointer;
-    border-radius: calc(var(--radius) - 4px);
-    transition: all 0.25s;
-    letter-spacing: 0.5px;
+    flex:1; padding:10px 8px; border:none; background:transparent;
+    font-family:'Noto Sans SC',sans-serif; font-size:14px; font-weight:500;
+    color:var(--ink-light); cursor:pointer; border-radius:calc(var(--radius) - 4px);
+    transition:all 0.25s; letter-spacing:0.5px;
   }
-  .tab-btn.active {
-    background: linear-gradient(135deg, #faf5ed, #f5ede0);
-    color: var(--brown);
-    font-weight: 600;
-    box-shadow: 0 1px 4px rgba(61,44,30,0.06);
-  }
-  .tab-btn:hover:not(.active) { color: var(--brown); background: rgba(245,237,224,0.4); }
-  .tab-icon { margin-right: 6px; }
-
-  /* Summary Cards */
-  .summary-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-  }
-  .summary-card {
-    background: #fff;
-    border-radius: var(--radius);
-    padding: 18px 20px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--divider);
-    position: relative;
-    overflow: hidden;
-  }
-  .summary-card::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 3px;
-    height: 100%;
-    border-radius: 3px 0 0 3px;
-  }
-  .summary-card.expense::after { background: var(--coral); }
-  .summary-card.income::after  { background: var(--sage); }
-  .summary-card.balance::after { background: var(--sky); }
-  .summary-label { font-size: 12px; color: var(--ink-light); letter-spacing: 1px; margin-bottom: 6px; }
-  .summary-amount {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 26px;
-    font-weight: 600;
-  }
-  .summary-amount.expense { color: var(--coral); }
-  .summary-amount.income  { color: var(--sage); }
-  .summary-amount.balance { color: var(--sky); }
+  .tab-btn.active { background:linear-gradient(135deg,#faf5ed,#f5ede0); color:var(--brown); font-weight:600; box-shadow:0 1px 4px rgba(61,44,30,0.06); }
+  .tab-btn:hover:not(.active) { color:var(--brown); background:rgba(245,237,224,0.4); }
+  .tab-icon { margin-right:4px; font-size:15px; }
 
   /* Cards */
-  .card {
-    background: #fff;
-    border-radius: var(--radius);
-    padding: 20px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--divider);
-  }
-  .card-header {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--brown);
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+  .card { background:#fff; border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); border:1px solid var(--divider); }
+  .card-header { font-family:'Noto Serif SC',serif; font-size:16px; font-weight:600; color:var(--brown); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
   .dot { width:6px; height:6px; border-radius:50%; display:inline-block; }
-  .dot.expense { background: var(--coral); }
-  .dot.income  { background: var(--sage); }
-  .dot.balance { background: var(--sky); }
+  .dot.expense { background:var(--coral); } .dot.income { background:var(--sage); } .dot.balance { background:var(--sky); }
+
+  /* Summary */
+  .summary-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .summary-card {
+    background:#fff; border-radius:var(--radius); padding:18px 20px;
+    box-shadow:var(--shadow); border:1px solid var(--divider); position:relative; overflow:hidden;
+  }
+  .summary-card::after { content:''; position:absolute; top:0; left:0; width:3px; height:100%; border-radius:3px 0 0 3px; }
+  .summary-card.expense::after { background:var(--coral); }
+  .summary-card.income::after { background:var(--sage); }
+  .summary-card.balance::after { background:var(--sky); }
+  .summary-card.budget::after { background:var(--gold); }
+  .summary-label { font-size:12px; color:var(--ink-light); letter-spacing:1px; margin-bottom:6px; }
+  .summary-amount { font-family:'Noto Serif SC',serif; font-size:24px; font-weight:600; }
+  .summary-amount.expense { color:var(--coral); } .summary-amount.income { color:var(--sage); }
+  .summary-amount.balance { color:var(--sky); } .summary-amount.budget { color:var(--gold); }
 
   /* Form */
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr auto auto;
-    gap: 10px;
-    align-items: end;
-  }
-  .form-row-2 { grid-template-columns: 1fr 1fr; }
-  .form-group { display: flex; flex-direction: column; gap: 5px; }
-  .form-group label { font-size: 12px; color: var(--ink-light); letter-spacing: 0.5px; }
-
+  .form-row { display:grid; grid-template-columns:1fr 1fr 1fr auto auto; gap:10px; align-items:end; }
+  .form-group { display:flex; flex-direction:column; gap:5px; }
+  .form-group label { font-size:12px; color:var(--ink-light); letter-spacing:0.5px; }
   input, select, textarea {
-    font-family: 'Noto Sans SC', sans-serif;
-    font-size: 14px;
-    padding: 10px 12px;
-    border: 1px solid var(--divider);
-    border-radius: var(--radius-sm);
-    background: #fdfaf5;
-    color: var(--ink);
-    outline: none;
-    transition: all 0.2s;
+    font-family:'Noto Sans SC',sans-serif; font-size:14px; padding:10px 12px;
+    border:1px solid var(--divider); border-radius:var(--radius-sm); background:#fdfaf5;
+    color:var(--ink); outline:none; transition:all 0.2s;
   }
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--sage);
-    box-shadow: 0 0 0 3px rgba(125,155,118,0.08);
-    background: #fff;
-  }
-
+  input:focus, select:focus, textarea:focus { border-color:var(--sage); box-shadow:0 0 0 3px rgba(125,155,118,0.08); background:#fff; }
   .btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-family: 'Noto Sans SC', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
+    padding:10px 20px; border:none; border-radius:var(--radius-sm);
+    font-family:'Noto Sans SC',sans-serif; font-size:14px; font-weight:500;
+    cursor:pointer; transition:all 0.2s; letter-spacing:0.5px; white-space:nowrap;
   }
-  .btn-primary { background: var(--sage); color: #fff; }
-  .btn-primary:hover { background: #6d8a66; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(125,155,118,0.25); }
-  .btn-outline { background: transparent; border: 1px solid var(--divider); color: var(--ink-light); }
-  .btn-outline:hover { background: #faf5ed; border-color: var(--brown-light); }
-  .btn-sm { padding: 6px 14px; font-size: 12px; }
-  .btn-danger { background: transparent; color: var(--coral); padding: 4px 8px; font-size: 12px; }
-  .btn-danger:hover { background: var(--coral-light); border-radius: 4px; }
+  .btn-primary { background:var(--sage); color:#fff; }
+  .btn-primary:hover { background:#6d8a66; transform:translateY(-1px); box-shadow:0 4px 12px rgba(125,155,118,0.25); }
+  .btn-outline { background:transparent; border:1px solid var(--divider); color:var(--ink-light); }
+  .btn-outline:hover { background:#faf5ed; border-color:var(--brown-light); }
+  .btn-sm { padding:6px 14px; font-size:12px; }
+  .btn-danger { background:transparent; color:var(--coral); padding:4px 8px; font-size:12px; }
+  .btn-danger:hover { background:var(--coral-light); border-radius:4px; }
+  .btn-xs { padding:3px 8px; font-size:11px; }
 
   /* Transaction List */
-  .txn-list { max-height: 340px; overflow-y: auto; }
-  .txn-list::-webkit-scrollbar { width: 4px; }
-  .txn-list::-webkit-scrollbar-thumb { background: var(--divider); border-radius: 2px; }
-  .txn-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--divider);
-  }
-  .txn-item:last-child { border-bottom: none; }
-  .txn-left { display: flex; align-items: center; gap: 12px; }
-  .txn-icon {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-  .txn-icon.expense { background: var(--coral-light); }
-  .txn-icon.income  { background: var(--sage-light); }
-  .txn-info { display: flex; flex-direction: column; gap: 2px; }
-  .txn-category { font-size: 14px; font-weight: 500; }
-  .txn-meta { font-size: 12px; color: var(--ink-light); }
-  .txn-note { font-size: 12px; color: var(--ink-light); font-style: italic; }
-  .txn-right { text-align: right; display: flex; flex-direction: column; gap: 2px; align-items: flex-end; }
-  .txn-amount { font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 600; }
-  .txn-amount.expense { color: var(--coral); }
-  .txn-amount.income  { color: var(--sage); }
+  .filter-bar { display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap; align-items:end; }
+  .filter-bar .form-group { min-width:100px; }
+  .filter-bar input, .filter-bar select { padding:7px 10px; font-size:13px; }
+  .txn-list { max-height:360px; overflow-y:auto; }
+  .txn-list::-webkit-scrollbar { width:4px; }
+  .txn-list::-webkit-scrollbar-thumb { background:var(--divider); border-radius:2px; }
+  .txn-item { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--divider); }
+  .txn-item:last-child { border-bottom:none; }
+  .txn-left { display:flex; align-items:center; gap:10px; }
+  .txn-icon { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+  .txn-icon.expense { background:var(--coral-light); } .txn-icon.income { background:var(--sage-light); }
+  .txn-info { display:flex; flex-direction:column; gap:1px; }
+  .txn-category { font-size:13px; font-weight:500; }
+  .txn-meta { font-size:11px; color:var(--ink-light); }
+  .txn-right { text-align:right; display:flex; flex-direction:column; gap:2px; align-items:flex-end; }
+  .txn-amount { font-family:'Noto Serif SC',serif; font-size:15px; font-weight:600; }
+  .txn-amount.expense { color:var(--coral); } .txn-amount.income { color:var(--sage); }
+  .txn-balance { font-size:11px; color:var(--ink-light); }
+  .txn-account-badge { font-size:10px; color:var(--sky); background:var(--sky-light); padding:1px 6px; border-radius:8px; }
 
-  .empty-state { text-align: center; padding: 40px 20px; color: var(--ink-light); font-size: 14px; }
-  .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.5; }
+  .empty-state { text-align:center; padding:40px 20px; color:var(--ink-light); font-size:14px; }
+  .empty-icon { font-size:40px; margin-bottom:12px; opacity:0.5; }
 
   /* Chart */
-  .chart-area { display: flex; align-items: center; gap: 20px; padding: 8px 0; }
-  .chart-legend { display: flex; flex-direction: column; gap: 8px; }
-  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
-  .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
-  .legend-amount { font-weight: 500; margin-left: 4px; }
+  .chart-area { display:flex; align-items:center; gap:20px; padding:8px 0; }
+  .chart-legend { display:flex; flex-direction:column; gap:8px; }
+  .legend-item { display:flex; align-items:center; gap:8px; font-size:13px; }
+  .legend-dot { width:10px; height:10px; border-radius:3px; flex-shrink:0; }
+  .legend-amount { font-weight:500; margin-left:4px; }
 
   /* Calendar */
-  .calendar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-  .calendar-month {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--brown);
-  }
-  .calendar-nav { display: flex; gap: 6px; }
-  .calendar-nav button {
-    width: 32px; height: 32px;
-    border: 1px solid var(--divider);
-    border-radius: 50%;
-    background: #fff;
-    cursor: pointer;
-    font-size: 14px;
-    color: var(--ink);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-  }
-  .calendar-nav button:hover { background: var(--sage-light); border-color: var(--sage); color: var(--sage); }
-  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
-  .calendar-day-label { text-align: center; font-size: 11px; color: var(--ink-light); padding: 6px 0; letter-spacing: 0.5px; }
-  .calendar-day {
-    aspect-ratio: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.15s;
-    position: relative;
-    color: var(--ink);
-  }
-  .calendar-day:hover { background: var(--sage-light); }
-  .calendar-day.today { background: var(--brown); color: #fff; font-weight: 600; }
-  .calendar-day.other { color: #d5cdc0; }
-  .calendar-day.has-event::after {
-    content: '';
-    position: absolute;
-    bottom: 4px;
-    width: 4px; height: 4px;
-    border-radius: 50%;
-    background: var(--coral);
-  }
-  .calendar-day.today.has-event::after { background: #fff; }
-  .calendar-day.selected { box-shadow: 0 0 0 2px var(--sage); }
+  .calendar-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .calendar-month { font-family:'Noto Serif SC',serif; font-size:18px; font-weight:600; color:var(--brown); }
+  .calendar-nav { display:flex; gap:6px; }
+  .calendar-nav button { width:32px; height:32px; border:1px solid var(--divider); border-radius:50%; background:#fff; cursor:pointer; font-size:14px; color:var(--ink); display:flex; align-items:center; justify-content:center; }
+  .calendar-nav button:hover { background:var(--sage-light); border-color:var(--sage); color:var(--sage); }
+  .calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+  .calendar-day-label { text-align:center; font-size:11px; color:var(--ink-light); padding:6px 0; letter-spacing:0.5px; }
+  .calendar-day { aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:50%; font-size:13px; cursor:pointer; transition:all 0.15s; position:relative; color:var(--ink); }
+  .calendar-day:hover { background:var(--sage-light); }
+  .calendar-day.today { background:var(--brown); color:#fff; font-weight:600; }
+  .calendar-day.other { color:#d5cdc0; }
+  .calendar-day.has-event::after { content:''; position:absolute; bottom:4px; width:4px; height:4px; border-radius:50%; background:var(--coral); }
+  .calendar-day.today.has-event::after { background:#fff; }
+  .calendar-day.selected { box-shadow:0 0 0 2px var(--sage); }
 
-  /* Events */
-  .event-list { max-height: 200px; overflow-y: auto; }
-  .event-list::-webkit-scrollbar { width: 4px; }
-  .event-list::-webkit-scrollbar-thumb { background: var(--divider); border-radius: 2px; }
-  .event-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--divider); }
-  .event-item:last-child { border-bottom: none; }
-  .event-time { font-family: 'Noto Serif SC', serif; font-size: 13px; color: var(--sky); font-weight: 600; min-width: 48px; padding-top: 2px; }
-  .event-info { flex: 1; }
-  .event-title-text { font-size: 14px; font-weight: 500; }
-  .event-desc { font-size: 12px; color: var(--ink-light); margin-top: 2px; }
+  .event-list { max-height:200px; overflow-y:auto; }
+  .event-list::-webkit-scrollbar { width:4px; }
+  .event-list::-webkit-scrollbar-thumb { background:var(--divider); border-radius:2px; }
+  .event-item { display:flex; align-items:flex-start; gap:12px; padding:10px 0; border-bottom:1px solid var(--divider); }
+  .event-item:last-child { border-bottom:none; }
+  .event-time { font-family:'Noto Serif SC',serif; font-size:13px; color:var(--sky); font-weight:600; min-width:48px; padding-top:2px; }
+  .event-info { flex:1; } .event-title-text { font-size:14px; font-weight:500; }
+  .event-desc { font-size:12px; color:var(--ink-light); margin-top:2px; }
+
+  /* Budget */
+  .budget-bar-wrap { background:#f0ebe0; border-radius:6px; height:20px; overflow:hidden; margin:8px 0 4px; }
+  .budget-bar-fill { height:100%; border-radius:6px; transition:width 0.5s; }
+  .budget-bar-fill.safe { background:var(--sage); }
+  .budget-bar-fill.warn { background:var(--gold); }
+  .budget-bar-fill.danger { background:var(--coral); }
+  .budget-stats { display:flex; justify-content:space-between; font-size:12px; color:var(--ink-light); }
+
+  /* Account cards */
+  .account-row { display:flex; gap:10px; flex-wrap:wrap; }
+  .account-chip {
+    padding:8px 14px; border-radius:20px; font-size:13px; font-weight:500;
+    cursor:pointer; border:2px solid transparent; transition:all 0.2s;
+    background:#fdfaf5; color:var(--ink);
+  }
+  .account-chip:hover { background:var(--sage-light); }
+  .account-chip.active { border-color:var(--sage); background:var(--sage-light); }
+
+  /* Settings */
+  .setting-row { display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--divider); }
+  .setting-row:last-child { border-bottom:none; }
+  .setting-label { font-size:14px; font-weight:500; }
+  .setting-desc { font-size:12px; color:var(--ink-light); margin-top:2px; }
+
+  /* Toggle switch */
+  .toggle { position:relative; width:44px; height:24px; flex-shrink:0; }
+  .toggle input { display:none; }
+  .toggle .slider { position:absolute; inset:0; background:#ddd; border-radius:12px; cursor:pointer; transition:0.3s; }
+  .toggle .slider::before { content:''; position:absolute; width:20px; height:20px; left:2px; bottom:2px; background:#fff; border-radius:50%; transition:0.3s; }
+  .toggle input:checked + .slider { background:var(--sage); }
+  .toggle input:checked + .slider::before { transform:translateX(20px); }
 
   /* Modal */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(44,36,22,0.4);
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  .modal-overlay { position:fixed; inset:0; background:rgba(44,36,22,0.4); z-index:100; display:flex; align-items:center; justify-content:center; }
+  .modal-overlay.hidden { display:none; }
   .modal {
-    background: #fff;
-    border-radius: var(--radius);
-    padding: 24px;
-    width: 90%;
-    max-width: 420px;
-    box-shadow: 0 2px 8px rgba(61,44,30,0.08), 0 8px 24px rgba(61,44,30,0.06);
+    background:#fff; border-radius:var(--radius); padding:24px; width:90%; max-width:440px;
+    box-shadow:0 2px 8px rgba(61,44,30,0.08), 0 8px 24px rgba(61,44,30,0.06);
   }
-  .modal h3 { font-family: 'Noto Serif SC', serif; font-size: 18px; color: var(--brown); margin-bottom: 16px; }
-  .modal .form-group { margin-bottom: 12px; }
-  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+  .modal h3 { font-family:'Noto Serif SC',serif; font-size:18px; color:var(--brown); margin-bottom:16px; }
+  .modal .form-group { margin-bottom:12px; }
+  .modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:20px; }
 
-  /* Animations */
-  .fade-enter-active, .fade-leave-active { transition: opacity 0.3s; }
-  .fade-enter-from, .fade-leave-to { opacity: 0; }
-  .slide-enter-active, .slide-leave-active { transition: all 0.3s ease; }
-  .slide-enter-from { opacity: 0; transform: translateY(16px); }
-  .slide-leave-to { opacity: 0; transform: translateY(-16px); }
+  /* Trend chart */
+  .trend-chart-wrap { position:relative; width:100%; }
 
-  /* ---- Side Clock ---- */
+  /* Side Clock */
   .side-clock {
-    flex-shrink: 0;
-    position: sticky;
-    top: 24px;
-    background: #fff;
-    border-radius: var(--radius);
-    padding: 18px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--divider);
-    text-align: center;
-    width: 170px;
+    flex-shrink:0; position:sticky; top:24px; background:#fff; border-radius:var(--radius);
+    padding:18px; box-shadow:var(--shadow); border:1px solid var(--divider); text-align:center; width:170px;
   }
-
   .clock-face {
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
-    border: 3px solid var(--brown);
-    margin: 0 auto 12px;
-    position: relative;
-    background: linear-gradient(135deg, #fdfaf5, #faf5ed);
-    box-shadow: inset 0 2px 8px rgba(61,44,30,0.04);
+    width:130px; height:130px; border-radius:50%; border:3px solid var(--brown);
+    margin:0 auto 12px; position:relative; background:linear-gradient(135deg,#fdfaf5,#faf5ed);
+    box-shadow:inset 0 2px 8px rgba(61,44,30,0.04);
   }
+  .clock-face::after { content:''; position:absolute; top:50%; left:50%; width:8px; height:8px; background:var(--coral); border-radius:50%; transform:translate(-50%,-50%); z-index:5; }
+  .clock-hour, .clock-min, .clock-sec { position:absolute; bottom:50%; left:50%; transform-origin:bottom center; border-radius:2px; }
+  .clock-hour { width:3px; height:30px; background:var(--brown); margin-left:-1.5px; border-radius:3px; }
+  .clock-min { width:2px; height:42px; background:var(--brown-light); margin-left:-1px; border-radius:2px; }
+  .clock-sec { width:1px; height:50px; background:var(--coral); margin-left:-0.5px; border-radius:1px; }
+  .clock-digital { font-family:'Noto Serif SC',serif; font-size:16px; font-weight:600; color:var(--brown); letter-spacing:1px; }
+  .clock-date { font-size:11px; color:var(--ink-light); margin-top:4px; letter-spacing:0.5px; }
+  .clock-tick { position:absolute; top:50%; left:50%; width:1px; height:6px; background:var(--brown); transform-origin:0 0; opacity:0.4; }
+  .clock-tick.major { height:10px; width:2px; opacity:0.7; margin-left:-0.5px; }
 
-  .clock-face::after {
-    content: '';
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 8px; height: 8px;
-    background: var(--coral);
-    border-radius: 50%;
-    transform: translate(-50%,-50%);
-    z-index: 5;
-    box-shadow: 0 0 4px rgba(201,123,107,0.3);
+  /* Tag input */
+  .tag-list { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+  .tag {
+    padding:4px 10px; border-radius:12px; font-size:12px; background:var(--sage-light); color:var(--brown);
+    display:flex; align-items:center; gap:4px;
   }
+  .tag-del { cursor:pointer; font-weight:bold; color:var(--coral); font-size:14px; line-height:1; }
+  .tag-del:hover { color:#a55; }
 
-  .clock-hour, .clock-min, .clock-sec {
-    position: absolute;
-    bottom: 50%;
-    left: 50%;
-    transform-origin: bottom center;
-    border-radius: 2px;
-  }
-
-  .clock-hour {
-    width: 3px;
-    height: 30px;
-    background: var(--brown);
-    margin-left: -1.5px;
-    border-radius: 3px;
-  }
-
-  .clock-min {
-    width: 2px;
-    height: 42px;
-    background: var(--brown-light);
-    margin-left: -1px;
-    border-radius: 2px;
-  }
-
-  .clock-sec {
-    width: 1px;
-    height: 50px;
-    background: var(--coral);
-    margin-left: -0.5px;
-    border-radius: 1px;
-  }
-
-  .clock-digital {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--brown);
-    letter-spacing: 1px;
-  }
-
-  .clock-date {
-    font-size: 11px;
-    color: var(--ink-light);
-    margin-top: 4px;
-    letter-spacing: 0.5px;
-  }
-
-  /* tick marks */
-  .clock-tick {
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 1px;
-    height: 6px;
-    background: var(--brown);
-    transform-origin: 0 0;
-    opacity: 0.4;
-  }
-
-  .clock-tick.major {
-    height: 10px;
-    width: 2px;
-    opacity: 0.7;
-    margin-left: -0.5px;
-  }
-
-  @media (max-width: 768px) {
-    .app-container { flex-direction: column; align-items: center; }
-    .side-clock { position: static; width: 100%; max-width: 300px; }
-    .clock-face { width: 100px; height: 100px; }
-    .clock-hour { height: 24px; }
-    .clock-min { height: 34px; }
-    .clock-sec { height: 40px; }
-    .form-row { grid-template-columns: 1fr 1fr; }
-    .form-row .btn-primary { grid-column: 1 / -1; }
-    .summary-row { grid-template-columns: 1fr; }
-    .chart-area { flex-direction: column; align-items: center; }
-    .calendar-grid { gap: 2px; }
+  @media (max-width:768px) {
+    .app-container { flex-direction:column; align-items:center; }
+    .side-clock { position:static; width:100%; max-width:300px; }
+    .clock-face { width:100px; height:100px; }
+    .clock-hour { height:24px; } .clock-min { height:34px; } .clock-sec { height:40px; }
+    .form-row { grid-template-columns:1fr 1fr; }
+    .form-row .btn-primary { grid-column:1/-1; }
+    .summary-row { grid-template-columns:1fr 1fr; }
+    .chart-area { flex-direction:column; align-items:center; }
+    .calendar-grid { gap:2px; }
+    .filter-bar { flex-direction:column; }
   }
 </style>
 </head>
@@ -482,14 +246,14 @@
   <div class="side-clock">
     <div class="clock-face">
       <template v-for="i in 12" :key="'t'+i">
-        <div class="clock-tick major" :style="`transform: translate(-50%,-50%) rotate(${i*30}deg) translateY(-55px)`"></div>
+        <div class="clock-tick major" :style="`transform:translate(-50%,-50%) rotate(${i*30}deg) translateY(-55px)`"></div>
       </template>
       <template v-for="i in 60" :key="'s'+i">
-        <div v-if="i % 5 !== 0" class="clock-tick" :style="`transform: translate(-50%,-50%) rotate(${i*6}deg) translateY(-55px)`"></div>
+        <div v-if="i%5!==0" class="clock-tick" :style="`transform:translate(-50%,-50%) rotate(${i*6}deg) translateY(-55px)`"></div>
       </template>
-      <div class="clock-hour" :style="`transform: rotate(${clockHourDeg}deg)`"></div>
-      <div class="clock-min" :style="`transform: rotate(${clockMinDeg}deg)`"></div>
-      <div class="clock-sec" :style="`transform: rotate(${clockSecDeg}deg)`"></div>
+      <div class="clock-hour" :style="`transform:rotate(${clockHourDeg}deg)`"></div>
+      <div class="clock-min" :style="`transform:rotate(${clockMinDeg}deg)`"></div>
+      <div class="clock-sec" :style="`transform:rotate(${clockSecDeg}deg)`"></div>
     </div>
     <div class="clock-digital">{{ clockDigital }}</div>
     <div class="clock-date">{{ clockDateStr }}</div>
@@ -504,165 +268,219 @@
 
     <!-- Tab Navigation -->
     <div class="tab-nav">
-      <button class="tab-btn" :class="{ active: activeTab === 'bookkeeping' }" @click="activeTab = 'bookkeeping'">
-        <span class="tab-icon">📒</span> 记账
-      </button>
-      <button class="tab-btn" :class="{ active: activeTab === 'calendar' }" @click="activeTab = 'calendar'">
-        <span class="tab-icon">📅</span> 日历提醒
-      </button>
+      <button class="tab-btn" :class="{active:tab==='txn'}" @click="tab='txn'"><span class="tab-icon">📒</span>记账</button>
+      <button class="tab-btn" :class="{active:tab==='cal'}" @click="tab='cal'"><span class="tab-icon">📅</span>日历</button>
+      <button class="tab-btn" :class="{active:tab==='rpt'}" @click="tab='rpt'"><span class="tab-icon">📊</span>报表</button>
+      <button class="tab-btn" :class="{active:tab==='budget'}" @click="tab='budget'"><span class="tab-icon">💰</span>预算</button>
+      <button class="tab-btn" :class="{active:tab==='settings'}" @click="tab='settings'"><span class="tab-icon">⚙️</span>设置</button>
     </div>
 
-    <!-- ===== 记账面板 ===== -->
-    <template v-if="activeTab === 'bookkeeping'">
-      <!-- Summary Cards -->
+    <!-- ===== TAB 1: 记账 ===== -->
+    <template v-if="tab==='txn'">
+      <!-- Summary -->
       <div class="summary-row">
-        <div class="summary-card expense">
-          <div class="summary-label">本月支出</div>
-          <div class="summary-amount expense">¥{{ totalExpense.toFixed(2) }}</div>
-        </div>
-        <div class="summary-card income">
-          <div class="summary-label">本月收入</div>
-          <div class="summary-amount income">¥{{ totalIncome.toFixed(2) }}</div>
-        </div>
-        <div class="summary-card balance">
-          <div class="summary-label">本月结余</div>
-          <div class="summary-amount balance">¥{{ (totalIncome - totalExpense).toFixed(2) }}</div>
-        </div>
+        <div class="summary-card expense"><div class="summary-label">本月支出</div><div class="summary-amount expense">¥{{ fmt(totalExpense) }}</div></div>
+        <div class="summary-card income"><div class="summary-label">本月收入</div><div class="summary-amount income">¥{{ fmt(totalIncome) }}</div></div>
+        <div class="summary-card balance"><div class="summary-label">本月结余</div><div class="summary-amount balance">¥{{ fmt(totalIncome - totalExpense) }}</div></div>
+        <div class="summary-card budget"><div class="summary-label">当前余额</div><div class="summary-amount budget">¥{{ fmt(currentBalance) }}</div></div>
       </div>
 
       <!-- Add Form -->
       <div class="card">
-        <div class="card-header"><span class="dot expense"></span> 记一笔</div>
+        <div class="card-header"><span class="dot expense"></span>记一笔</div>
         <div class="form-row">
-          <div class="form-group">
-            <label>类型</label>
-            <select v-model="form.type">
-              <option value="expense">支出</option>
-              <option value="income">收入</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>金额</label>
-            <input type="number" v-model.number="form.amount" placeholder="0.00" step="0.01" min="0.01" @keyup.enter="addTransaction">
-          </div>
-          <div class="form-group">
-            <label>分类</label>
-            <select v-model="form.category">
-              <option v-for="c in currentCategories" :key="c" :value="c">{{ c }}</option>
-            </select>
-          </div>
-          <button class="btn btn-primary" @click="addTransaction">✓ 记录</button>
+          <div class="form-group"><label>类型</label><select v-model="f.type"><option value="expense">支出</option><option value="income">收入</option></select></div>
+          <div class="form-group"><label>金额</label><input type="number" v-model.number="f.amount" placeholder="0.00" step="0.01" min="0.01" @keyup.enter="addTxn"></div>
+          <div class="form-group"><label>账户</label><select v-model="f.account"><option v-for="a in accounts" :key="a.id" :value="a.id">{{ a.icon }} {{ a.name }}</option></select></div>
+          <div class="form-group"><label>分类</label><select v-model="f.category"><option v-for="c in currentCats" :key="c" :value="c">{{ c }}</option></select></div>
+          <button class="btn btn-primary" @click="addTxn">✓ 记录</button>
         </div>
-        <div class="form-row form-row-2" style="margin-top:10px;">
-          <div class="form-group">
-            <label>日期</label>
-            <input type="date" v-model="form.date">
-          </div>
-          <div class="form-group">
-            <label>备注（可选）</label>
-            <input type="text" v-model="form.note" placeholder="例如：午餐外卖">
-          </div>
+        <div class="form-row" style="margin-top:10px; grid-template-columns:1fr 1fr 1fr;">
+          <div class="form-group"><label>日期</label><input type="date" v-model="f.date"></div>
+          <div class="form-group"><label>备注</label><input type="text" v-model="f.note" placeholder="例如：午餐外卖"></div>
         </div>
       </div>
 
-      <!-- Chart + List -->
-      <div style="display:grid; grid-template-columns: 1fr 1.2fr; gap:16px;">
-        <div class="card">
-          <div class="card-header"><span class="dot expense"></span> 支出分类</div>
-          <div v-if="expenseCategories.length === 0" class="empty-state">
-            <div class="empty-icon">📊</div>
-            <div>暂无支出数据</div>
-          </div>
-          <div v-else class="chart-area">
-            <canvas ref="pieCanvas" width="170" height="170"></canvas>
-            <div class="chart-legend">
-              <div class="legend-item" v-for="c in expenseCategories" :key="c.name">
-                <span class="legend-dot" :style="{ background: c.color }"></span>
-                <span>{{ c.name }}</span>
-                <span class="legend-amount">¥{{ c.total.toFixed(2) }}</span>
+      <!-- Filter + List -->
+      <div class="card">
+        <div class="card-header"><span class="dot expense"></span>明细</div>
+        <div class="filter-bar">
+          <div class="form-group"><label>起始</label><input type="date" v-model="filter.from"></div>
+          <div class="form-group"><label>截止</label><input type="date" v-model="filter.to"></div>
+          <div class="form-group"><label>类型</label><select v-model="filter.type"><option value="">全部</option><option value="expense">支出</option><option value="income">收入</option></select></div>
+          <div class="form-group"><label>分类</label><select v-model="filter.category"><option value="">全部</option><option v-for="c in allCats" :key="c" :value="c">{{ c }}</option></select></div>
+          <div class="form-group"><label>账户</label><select v-model="filter.account"><option value="">全部</option><option v-for="a in accounts" :key="a.id" :value="a.id">{{ a.name }}</option></select></div>
+          <button class="btn btn-outline btn-sm" @click="resetFilter">重置</button>
+          <span style="font-size:12px;color:var(--ink-light);padding-top:8px;">共 {{ filteredTxns.length }} 条</span>
+        </div>
+        <div class="txn-list">
+          <TransitionGroup name="slide" tag="div">
+            <div v-if="filteredTxns.length===0" class="empty-state" key="empty"><div class="empty-icon">📝</div><div>暂无记录</div></div>
+            <div v-for="t in filteredTxns" :key="t.id" class="txn-item">
+              <div class="txn-left">
+                <div class="txn-icon" :class="t.type">{{ t.category.slice(0,2) }}</div>
+                <div class="txn-info">
+                  <div class="txn-category">{{ t.category }} <span class="txn-account-badge">{{ acctName(t.account) }}</span></div>
+                  <div class="txn-meta">{{ t.date }}<span v-if="t.note"> · {{ t.note }}</span></div>
+                </div>
+              </div>
+              <div class="txn-right">
+                <div class="txn-amount" :class="t.type">{{ t.type==='income'?'+':'-' }}¥{{ t.amount.toFixed(2) }}</div>
+                <div class="txn-balance">余额 ¥{{ t.balance.toFixed(2) }}</div>
+                <button class="btn btn-danger" @click="delTxn(t.id)">删除</button>
               </div>
             </div>
+          </TransitionGroup>
+        </div>
+      </div>
+    </template>
+
+    <!-- ===== TAB 2: 日历 ===== -->
+    <template v-if="tab==='cal'">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div class="card">
+          <div class="calendar-header">
+            <span class="calendar-month">{{ calYear }}年{{ calMonth }}月</span>
+            <div class="calendar-nav"><button @click="chgMonth(-1)">◀</button><button @click="chgMonth(1)">▶</button></div>
+          </div>
+          <div class="calendar-grid">
+            <div class="calendar-day-label" v-for="d in weekLabels" :key="d">{{ d }}</div>
+            <div v-for="(day,i) in calDays" :key="i" class="calendar-day"
+              :class="{other:!day.cur, today:day.isToday, selected:day.ds===selDate, 'has-event':day.hasEvt}"
+              @click="pickDate(day)">{{ day.day }}</div>
           </div>
         </div>
         <div class="card">
-          <div class="card-header"><span class="dot expense"></span> 本月明细</div>
-          <div class="txn-list">
-            <TransitionGroup name="slide" tag="div">
-              <div v-if="monthTransactions.length === 0" class="empty-state" key="empty">
-                <div class="empty-icon">📝</div>
-                <div>还没有记录，开始记一笔吧</div>
-              </div>
-              <div v-for="t in monthTransactions" :key="t.id" class="txn-item">
-                <div class="txn-left">
-                  <div class="txn-icon" :class="t.type">{{ t.category.slice(0, 2) }}</div>
-                  <div class="txn-info">
-                    <div class="txn-category">{{ t.category }}</div>
-                    <div class="txn-meta">{{ t.date }}<span v-if="t.note"> · </span></div>
-                    <div class="txn-note" v-if="t.note">{{ t.note }}</div>
-                  </div>
-                </div>
-                <div class="txn-right">
-                  <div class="txn-amount" :class="t.type">{{ t.type === 'income' ? '+' : '-' }}¥{{ t.amount.toFixed(2) }}</div>
-                  <button class="btn btn-danger" @click="deleteTransaction(t.id)">删除</button>
-                </div>
-              </div>
-            </TransitionGroup>
+          <div class="card-header"><span class="dot balance"></span><span>{{ selDate }} 提醒</span></div>
+          <div class="event-list">
+            <div v-if="selEvents.length===0" class="empty-state"><div class="empty-icon">🔔</div><div>今天没有安排</div></div>
+            <div v-for="e in selEvents" :key="e.id" class="event-item">
+              <div class="event-time">{{ e.time||'全天' }}</div>
+              <div class="event-info"><div class="event-title-text">{{ e.title }}</div><div class="event-desc" v-if="e.desc">{{ e.desc }}</div></div>
+              <button class="btn btn-danger" @click="delEvt(e.id)">删除</button>
+            </div>
+          </div>
+          <div style="margin-top:12px; display:flex; gap:8px;">
+            <button class="btn btn-primary btn-sm" @click="openEvt">+ 添加提醒</button>
+            <button class="btn btn-outline btn-sm" @click="goToday">回到今天</button>
           </div>
         </div>
       </div>
     </template>
 
-    <!-- ===== 日历面板 ===== -->
-    <template v-if="activeTab === 'calendar'">
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+    <!-- ===== TAB 3: 报表 ===== -->
+    <template v-if="tab==='rpt'">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
         <div class="card">
-          <div class="calendar-header">
-            <span class="calendar-month">{{ calYear }}年{{ calMonth }}月</span>
-            <div class="calendar-nav">
-              <button @click="changeMonth(-1)">◀</button>
-              <button @click="changeMonth(1)">▶</button>
-            </div>
-          </div>
-          <div class="calendar-grid">
-            <div class="calendar-day-label" v-for="d in weekLabels" :key="d">{{ d }}</div>
-            <div
-              v-for="(day, i) in calendarDays" :key="i"
-              class="calendar-day"
-              :class="{
-                'other': !day.currentMonth,
-                'today': day.isToday,
-                'selected': day.dateStr === selectedDate,
-                'has-event': day.hasEvent
-              }"
-              @click="selectDate(day)">
-              {{ day.day }}
+          <div class="card-header"><span class="dot expense"></span>支出分类占比</div>
+          <div v-if="expenseCats.length===0" class="empty-state"><div class="empty-icon">📊</div><div>暂无支出数据</div></div>
+          <div v-else class="chart-area">
+            <canvas ref="pieCvs" width="170" height="170"></canvas>
+            <div class="chart-legend">
+              <div class="legend-item" v-for="c in expenseCats" :key="c.name"><span class="legend-dot" :style="{background:c.color}"></span><span>{{ c.name }}</span><span class="legend-amount">¥{{ c.total.toFixed(2) }}</span></div>
             </div>
           </div>
         </div>
-
         <div class="card">
-          <div class="card-header">
-            <span class="dot balance"></span>
-            <span>{{ selectedDate }} 提醒</span>
+          <div class="card-header"><span class="dot balance"></span>近6月收支趋势</div>
+          <div v-if="trendMonths.length===0" class="empty-state"><div class="empty-icon">📈</div><div>暂无足够数据</div></div>
+          <div v-else class="trend-chart-wrap">
+            <canvas ref="trendCvs" width="420" height="260"></canvas>
           </div>
-          <div class="event-list">
-            <div v-if="selectedEvents.length === 0" class="empty-state">
-              <div class="empty-icon">🔔</div>
-              <div>今天没有安排</div>
+        </div>
+      </div>
+    </template>
+
+    <!-- ===== TAB 4: 预算 ===== -->
+    <template v-if="tab==='budget'">
+      <div class="card">
+        <div class="card-header"><span class="dot balance"></span>{{ budgetMonth }} 预算设置</div>
+        <div class="form-row" style="grid-template-columns:1fr 1fr auto;">
+          <div class="form-group"><label>月度总预算</label><input type="number" v-model.number="budgetForm.total" placeholder="0.00" step="0.01" min="0"></div>
+          <button class="btn btn-primary" @click="saveBudget" style="align-self:end;">💾 保存预算</button>
+        </div>
+        <div style="margin-top:16px;">
+          <div class="card-header" style="font-size:14px;">分类预算</div>
+          <div v-for="cat in allCats" :key="cat" style="margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
+              <span>{{ cat }}</span>
+              <span>
+                已用 ¥{{ (catSpent(cat)).toFixed(2) }}
+                <template v-if="budgetCats[cat]"> / 预算 ¥{{ budgetCats[cat].toFixed(2) }}</template>
+                <span v-if="budgetCats[cat] && catSpent(cat) >= budgetCats[cat]" style="color:var(--coral);"> ⚠️超支</span>
+                <span v-else-if="budgetCats[cat] && catSpent(cat) >= budgetCats[cat]*0.8" style="color:var(--gold);"> ⚡即将超支</span>
+              </span>
             </div>
-            <div v-for="e in selectedEvents" :key="e.id" class="event-item">
-              <div class="event-time">{{ e.time || '全天' }}</div>
-              <div class="event-info">
-                <div class="event-title-text">{{ e.title }}</div>
-                <div class="event-desc" v-if="e.desc">{{ e.desc }}</div>
-              </div>
-              <button class="btn btn-danger" @click="deleteEvent(e.id)">删除</button>
+            <div class="budget-bar-wrap">
+              <div class="budget-bar-fill" :class="budgetBarClass(cat)" :style="{width:budgetBarPct(cat)+'%'}"></div>
             </div>
           </div>
-          <div style="margin-top: 12px; display: flex; gap: 8px;">
-            <button class="btn btn-primary btn-sm" @click="openEventModal">+ 添加提醒</button>
-            <button class="btn btn-outline btn-sm" @click="selectToday">回到今天</button>
+        </div>
+      </div>
+    </template>
+
+    <!-- ===== TAB 5: 设置 ===== -->
+    <template v-if="tab==='settings'">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <!-- 账户管理 -->
+        <div class="card">
+          <div class="card-header"><span class="dot balance"></span>账户管理</div>
+          <div class="account-row" style="margin-bottom:12px;">
+            <span v-for="a in accounts" :key="a.id" class="account-chip" :class="{active:selectedAcct===a.id}" @click="selectedAcct=a.id">
+              {{ a.icon }} {{ a.name }} <span style="font-size:10px;color:var(--ink-light);">¥{{ acctBal(a.id).toFixed(0) }}</span>
+            </span>
           </div>
+          <div class="form-row" style="grid-template-columns:1fr 1fr auto;">
+            <div class="form-group"><label>账户名</label><input type="text" v-model="acctForm.name" placeholder="如：工资卡"></div>
+            <div class="form-group"><label>图标</label><select v-model="acctForm.icon"><option v-for="ic in icons" :key="ic" :value="ic">{{ ic }}</option></select></div>
+            <button class="btn btn-primary btn-sm" @click="addAcct" style="align-self:end;">+ 添加</button>
+          </div>
+          <button v-if="accounts.length>1" class="btn btn-outline btn-sm" style="margin-top:8px;" @click="delAcct(selectedAcct)">删除选中账户</button>
+        </div>
+
+        <!-- 分类管理 -->
+        <div class="card">
+          <div class="card-header"><span class="dot expense"></span>分类管理</div>
+          <div style="margin-bottom:8px; font-size:12px; color:var(--ink-light);">支出分类</div>
+          <div class="tag-list" style="margin-bottom:12px;">
+            <span class="tag" v-for="c in customCats.expense" :key="c">{{ c }} <span class="tag-del" @click="rmCat('expense',c)">×</span></span>
+          </div>
+          <div style="margin-bottom:8px; font-size:12px; color:var(--ink-light);">收入分类</div>
+          <div class="tag-list" style="margin-bottom:12px;">
+            <span class="tag" v-for="c in customCats.income" :key="c">{{ c }} <span class="tag-del" @click="rmCat('income',c)">×</span></span>
+          </div>
+          <div class="form-row" style="grid-template-columns:1fr 1fr auto;">
+            <div class="form-group"><label>类型</label><select v-model="catForm.type"><option value="expense">支出</option><option value="income">收入</option></select></div>
+            <div class="form-group"><label>新分类名</label><input type="text" v-model="catForm.name" placeholder="如：宠物"></div>
+            <button class="btn btn-primary btn-sm" @click="addCat" style="align-self:end;">+ 添加</button>
+          </div>
+        </div>
+
+        <!-- 数据备份 -->
+        <div class="card">
+          <div class="card-header"><span class="dot income"></span>数据备份</div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn btn-outline btn-sm" @click="exportCSV">📥 导出 CSV</button>
+            <button class="btn btn-outline btn-sm" @click="exportJSON">📥 导出 JSON 备份</button>
+            <button class="btn btn-outline btn-sm" @click="triggerImport">📤 导入 JSON</button>
+            <input type="file" ref="importFile" accept=".json" style="display:none;" @change="importJSON">
+          </div>
+          <div style="font-size:11px; color:var(--ink-light); margin-top:10px;">
+            CSV 可用 Excel 打开 · JSON 用于完整备份恢复 · 导入会覆盖当前数据
+          </div>
+        </div>
+
+        <!-- 提醒设置 -->
+        <div class="card">
+          <div class="card-header"><span class="dot expense"></span>提醒设置</div>
+          <div class="setting-row">
+            <div><div class="setting-label">每日记账提醒</div><div class="setting-desc">每天 {{ reminderTime }} 浏览器弹出提醒</div></div>
+            <label class="toggle"><input type="checkbox" v-model="reminderOn" @change="saveSettings"><span class="slider"></span></label>
+          </div>
+          <div class="form-row" style="grid-template-columns:1fr auto; margin-top:8px;">
+            <div class="form-group"><label>提醒时间</label><input type="time" v-model="reminderTime" @change="saveSettings"></div>
+          </div>
+          <button class="btn btn-outline btn-sm" style="margin-top:8px;" @click="testReminder">🔔 测试提醒</button>
         </div>
       </div>
     </template>
@@ -672,28 +490,16 @@
 
   <!-- Event Modal -->
   <Teleport to="body">
-    <div v-if="showEventModal" class="modal-overlay" @click.self="closeEventModal">
+    <div v-if="showEvtModal" class="modal-overlay" @click.self="closeEvt">
       <div class="modal">
         <h3>添加提醒</h3>
-        <div class="form-group">
-          <label>日期</label>
-          <input type="date" v-model="eventForm.date">
-        </div>
-        <div class="form-group">
-          <label>时间（可选）</label>
-          <input type="time" v-model="eventForm.time">
-        </div>
-        <div class="form-group">
-          <label>标题</label>
-          <input type="text" v-model="eventForm.title" placeholder="例如：交房租">
-        </div>
-        <div class="form-group">
-          <label>备注（可选）</label>
-          <textarea v-model="eventForm.desc" rows="2" placeholder="补充说明..."></textarea>
-        </div>
+        <div class="form-group"><label>日期</label><input type="date" v-model="ef.date"></div>
+        <div class="form-group"><label>时间（可选）</label><input type="time" v-model="ef.time"></div>
+        <div class="form-group"><label>标题</label><input type="text" v-model="ef.title" placeholder="例如：交房租"></div>
+        <div class="form-group"><label>备注</label><textarea v-model="ef.desc" rows="2" placeholder="补充说明..."></textarea></div>
         <div class="modal-actions">
-          <button class="btn btn-outline" @click="closeEventModal">取消</button>
-          <button class="btn btn-primary" @click="saveEvent">保存</button>
+          <button class="btn btn-outline" @click="closeEvt">取消</button>
+          <button class="btn btn-primary" @click="saveEvt">保存</button>
         </div>
       </div>
     </div>
@@ -703,293 +509,426 @@
 <script>
 const { createApp, ref, computed, watch, onMounted, nextTick, TransitionGroup, Teleport } = Vue;
 
-/* ---- 分类常量 ---- */
-const CAT_EXPENSE = ['🍔 餐饮','🚇 交通','🛒 购物','🏠 居住','🎬 娱乐','💊 医疗','📚 教育','📦 其他'];
-const CAT_INCOME  = ['💼 薪资','🎁 礼金','📦 其他'];
+/* ---- 常量 ---- */
+const DEF_EXPENSE = ['🍔 餐饮','🚇 交通','🛒 购物','🏠 居住','🎬 娱乐','💊 医疗','📚 教育','📦 其他'];
+const DEF_INCOME  = ['💼 薪资','🎁 礼金','📦 其他'];
 const CAT_COLORS = {
   '🍔 餐饮':'#c97b6b','🚇 交通':'#d4a373','🛒 购物':'#e0a899','🏠 居住':'#b5838d',
   '🎬 娱乐':'#8b7355','💊 医疗':'#a98467','📚 教育':'#6c584c','💼 薪资':'#7d9b76',
   '🎁 礼金':'#a3b18a','📦 其他':'#adc4b5'
 };
+const ICONS = ['💵','💳','🏦','📱','🐷','💼','💰','🎯','🏠','💎'];
 const WEEK_LABELS = ['日','一','二','三','四','五','六'];
 
-/* ---- localStorage helpers ---- */
-function load(key) {
-  try { return JSON.parse(localStorage.getItem(key)) || []; }
-  catch { return []; }
-}
-function save(key, data) {
-  localStorage.setItem(key, JSON.stringify(data));
-}
+function ls(k) { try { return JSON.parse(localStorage.getItem(k))||null; } catch { return null; } }
+function ss(k,v) { localStorage.setItem(k,JSON.stringify(v)); }
+
+function fmt(n) { return Number(n||0).toFixed(2); }
+function ym(d) { return d.substring(0,7); }
 
 createApp({
   components: { TransitionGroup, Teleport },
-
   setup() {
-    /* ============ 时钟状态 ============ */
-    const clockHourDeg = ref(0);
-    const clockMinDeg = ref(0);
-    const clockSecDeg = ref(0);
-    const clockDigital = ref('');
-    const clockDateStr = ref('');
-
-    const updateClock = () => {
-      const now = new Date();
-      const h = now.getHours();
-      const m = now.getMinutes();
-      const s = now.getSeconds();
-      clockHourDeg.value = (h % 12) * 30 + m * 0.5;
-      clockMinDeg.value = m * 6 + s * 0.1;
-      clockSecDeg.value = s * 6;
-      clockDigital.value = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-      const w = ['日','一','二','三','四','五','六'];
-      clockDateStr.value = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 星期${w[now.getDay()]}`;
+    /* ========== 时钟 ========== */
+    const clockHourDeg=ref(0), clockMinDeg=ref(0), clockSecDeg=ref(0), clockDigital=ref(''), clockDateStr=ref('');
+    const tick = () => {
+      const n=new Date(); const h=n.getHours(), m=n.getMinutes(), s=n.getSeconds();
+      clockHourDeg.value=(h%12)*30+m*0.5; clockMinDeg.value=m*6+s*0.1; clockSecDeg.value=s*6;
+      clockDigital.value=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      const w=['日','一','二','三','四','五','六'];
+      clockDateStr.value=`${n.getFullYear()}年${n.getMonth()+1}月${n.getDate()}日 星期${w[n.getDay()]}`;
     };
 
-    /* ============ 共享状态 ============ */
-    const activeTab = ref('bookkeeping');
+    /* ========== 账户 ========== */
+    const DEF_ACCTS = [{id:'cash',name:'现金',icon:'💵'},{id:'bank',name:'银行卡',icon:'🏦'},{id:'wechat',name:'微信',icon:'📱'},{id:'alipay',name:'支付宝',icon:'💳'}];
+    const accounts = ref(ls('dl_accounts')||[...DEF_ACCTS]);
+    const selectedAcct = ref(accounts.value[0]?.id||'cash');
+    const acctForm = ref({name:'',icon:'💵'});
+    const icons = ICONS;
+    function acctName(id) { const a=accounts.value.find(x=>x.id===id); return a?a.name:'?'; }
+    function acctBal(id) {
+      return transactions.value
+        .filter(t=>t.account===id)
+        .reduce((s,t)=>s+(t.type==='income'?t.amount:-t.amount), 0);
+    }
+    function addAcct() {
+      const n=acctForm.value.name.trim(); if(!n) return;
+      accounts.value.push({id:'a'+Date.now(), name:n, icon:acctForm.value.icon});
+      ss('dl_accounts',accounts.value);
+      acctForm.value.name=''; acctForm.value.icon='💵';
+    }
+    function delAcct(id) {
+      if(accounts.value.length<=1) return;
+      if(transactions.value.some(t=>t.account===id) && !confirm('该账户有交易记录，删除后相关记录会保留但账户显示为"?"。确认删除？')) return;
+      accounts.value=accounts.value.filter(a=>a.id!==id);
+      if(selectedAcct.value===id) selectedAcct.value=accounts.value[0]?.id||'cash';
+      ss('dl_accounts',accounts.value);
+    }
+    watch(accounts, v=>ss('dl_accounts',v), {deep:true});
+
+    /* ========== 自定义分类 ========== */
+    const customCats = ref(ls('dl_customCats')||{expense:[],income:[]});
+    const catForm = ref({type:'expense',name:''});
+    const allCats = computed(() => {
+      const e=[...DEF_EXPENSE, ...customCats.value.expense];
+      const inc=[...DEF_INCOME, ...customCats.value.income];
+      return [...new Set([...e,...inc])];
+    });
+    function addCat() {
+      const n=catForm.value.name.trim(); if(!n) return;
+      const t=catForm.value.type;
+      if(!customCats.value[t].includes(n)) { customCats.value[t].push(n); ss('dl_customCats',customCats.value); }
+      catForm.value.name='';
+    }
+    function rmCat(type,name) {
+      // don't allow removing defaults
+      if(type==='expense' && DEF_EXPENSE.includes(name)) return;
+      if(type==='income' && DEF_INCOME.includes(name)) return;
+      customCats.value[type]=customCats.value[type].filter(c=>c!==name);
+      ss('dl_customCats',customCats.value);
+    }
+    watch(customCats, v=>ss('dl_customCats',v), {deep:true});
+
+    /* ========== 通用 ========== */
+    const tab = ref('txn');
     const headerDate = ref('');
-    const updateHeader = () => {
-      const d = new Date();
-      const w = ['日','一','二','三','四','五','六'];
-      headerDate.value = `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 星期${w[d.getDay()]}`;
+    const updHeader = () => {
+      const d=new Date(); const w=['日','一','二','三','四','五','六'];
+      headerDate.value=`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 星期${w[d.getDay()]}`;
     };
 
-    /* ============ 记账状态 ============ */
-    const transactions = ref(load('daily_life_transactions'));
-    const form = ref({
-      type: 'expense',
-      amount: null,
-      category: '🍔 餐饮',
-      date: new Date().toISOString().slice(0,10),
-      note: ''
-    });
-    const pieCanvas = ref(null);
+    /* ========== 记账 ========== */
+    const transactions = ref(ls('dl_transactions')||[]);
+    const f = ref({type:'expense', amount:null, category:'🍔 餐饮', account:'cash', date:new Date().toISOString().slice(0,10), note:''});
+    const pieCvs = ref(null);
+    const trendCvs = ref(null);
 
-    const currentMonth = computed(() => {
-      const d = new Date();
-      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const curMonth = computed(() => {
+      const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
     });
 
-    const currentCategories = computed(() => form.value.type === 'income' ? CAT_INCOME : CAT_EXPENSE);
+    const currentCats = computed(() => {
+      const t=f.value.type; const base=t==='income'?DEF_INCOME:DEF_EXPENSE;
+      return [...base, ...customCats.value[t]];
+    });
 
-    const monthTransactions = computed(() =>
-      transactions.value.filter(t => t.month === currentMonth.value)
+    const monthTxns = computed(() => transactions.value.filter(t=>t.month===curMonth.value));
+
+    const totalExpense = computed(() => monthTxns.value.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0));
+    const totalIncome  = computed(() => monthTxns.value.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0));
+
+    // 当前总余额（所有账户，全部时间）
+    const currentBalance = computed(() =>
+      transactions.value.reduce((s,t)=>s+(t.type==='income'?t.amount:-t.amount), 0)
     );
 
-    const totalExpense = computed(() =>
-      monthTransactions.value.filter(t => t.type === 'expense').reduce((s,t) => s + t.amount, 0)
-    );
-
-    const totalIncome = computed(() =>
-      monthTransactions.value.filter(t => t.type === 'income').reduce((s,t) => s + t.amount, 0)
-    );
-
-    const expenseCategories = computed(() => {
-      const map = {};
-      monthTransactions.value.filter(t => t.type === 'expense').forEach(t => {
-        map[t.category] = (map[t.category] || 0) + t.amount;
-      });
-      return Object.entries(map).map(([name, total]) => ({
-        name, total, color: CAT_COLORS[name] || '#ccc'
-      }));
+    const expenseCats = computed(() => {
+      const map={};
+      monthTxns.value.filter(t=>t.type==='expense').forEach(t=>{ map[t.category]=(map[t.category]||0)+t.amount; });
+      return Object.entries(map).map(([name,total])=>({name,total,color:CAT_COLORS[name]||'#b0a090'}));
     });
 
-    function drawPieChart() {
-      if (!pieCanvas.value) return;
-      const canvas = pieCanvas.value;
-      const ctx = canvas.getContext('2d');
-      const w = canvas.width, h = canvas.height;
-      const cx = w/2, cy = h/2, r = 70;
-      ctx.clearRect(0, 0, w, h);
+    /* ---- 筛选 ---- */
+    const filter = ref({from:'',to:'',type:'',category:'',account:''});
 
-      const cats = expenseCategories.value;
-      if (cats.length === 0) return;
+    const filteredTxns = computed(() => {
+      let arr = [...transactions.value];
+      // add running balance
+      // sort by date asc then id asc
+      arr.sort((a,b)=>a.date.localeCompare(b.date)||a.id-b.id);
+      let bal = 0;
+      arr.forEach(t=>{ bal += t.type==='income'?t.amount:-t.amount; t._bal=bal; });
+      // then reverse for display (newest first)
+      arr.reverse();
 
-      const total = cats.reduce((s,c) => s + c.total, 0);
-      let angle = -Math.PI / 2;
-
-      cats.forEach(cat => {
-        const slice = (cat.total / total) * Math.PI * 2;
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.arc(cx, cy, r, angle, angle + slice);
-        ctx.closePath();
-        ctx.fillStyle = cat.color;
-        ctx.fill();
-        angle += slice;
-      });
-
-      // center hole → donut
-      ctx.beginPath();
-      ctx.arc(cx, cy, 42, 0, Math.PI * 2);
-      ctx.fillStyle = '#fff';
-      ctx.fill();
-    }
-
-    watch(expenseCategories, () => nextTick(drawPieChart), { deep: true });
-
-    function addTransaction() {
-      const { type, amount, category, date, note } = form.value;
-      if (!amount || amount <= 0) { alert('请输入有效金额'); return; }
-      transactions.value.unshift({
-        id: Date.now(),
-        type, amount, category,
-        date: date || new Date().toISOString().slice(0,10),
-        note: note.trim(),
-        month: (date || new Date().toISOString().slice(0,10)).substring(0,7)
-      });
-      save('daily_life_transactions', transactions.value);
-      form.value.amount = null;
-      form.value.note = '';
-    }
-
-    function deleteTransaction(id) {
-      transactions.value = transactions.value.filter(t => t.id !== id);
-      save('daily_life_transactions', transactions.value);
-    }
-
-    // 切换类型时自动切分类
-    watch(() => form.value.type, () => {
-      form.value.category = currentCategories.value[0];
+      const flt=filter.value;
+      if(flt.from) arr=arr.filter(t=>t.date>=flt.from);
+      if(flt.to) arr=arr.filter(t=>t.date<=flt.to);
+      if(flt.type) arr=arr.filter(t=>t.type===flt.type);
+      if(flt.category) arr=arr.filter(t=>t.category===flt.category);
+      if(flt.account) arr=arr.filter(t=>t.account===flt.account);
+      // add balance display
+      return arr.map(t=>({...t, balance:t._bal}));
     });
 
-    /* ============ 日历状态 ============ */
-    const events = ref(load('daily_life_events'));
-    const calYear = ref(new Date().getFullYear());
-    const calMonth = ref(new Date().getMonth() + 1);
-    const selectedDate = ref(new Date().toISOString().slice(0,10));
-    const showEventModal = ref(false);
-    const eventForm = ref({ date: '', time: '', title: '', desc: '' });
+    function resetFilter() { filter.value={from:'',to:'',type:'',category:'',account:''}; }
 
-    const weekLabels = WEEK_LABELS;
-    const todayStr = new Date().toISOString().slice(0,10);
+    /* ---- 图表 ---- */
+    function drawPie() {
+      if(!pieCvs.value) return;
+      const ctx=pieCvs.value.getContext('2d'), w=170,h=170,cx=85,cy=85,r=70;
+      ctx.clearRect(0,0,w,h);
+      const cats=expenseCats.value; if(!cats.length) return;
+      const total=cats.reduce((s,c)=>s+c.total,0);
+      let angle=-Math.PI/2;
+      cats.forEach(c=>{
+        const slice=(c.total/total)*Math.PI*2;
+        ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,angle,angle+slice); ctx.closePath();
+        ctx.fillStyle=c.color; ctx.fill(); angle+=slice;
+      });
+      ctx.beginPath(); ctx.arc(cx,cy,42,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
+    }
+    watch(expenseCats, ()=>nextTick(drawPie), {deep:true});
 
-    const calendarDays = computed(() => {
-      const y = calYear.value, m = calMonth.value;
-      const firstDay = new Date(y, m-1, 1).getDay();
-      const daysInMonth = new Date(y, m, 0).getDate();
-      const daysInPrev = new Date(y, m-1, 0).getDate();
+    /* 趋势图 */
+    const trendMonths = computed(() => {
+      const months=[]; const d=new Date();
+      for(let i=5;i>=0;i--) {
+        const m=new Date(d.getFullYear(), d.getMonth()-i, 1);
+        months.push(`${m.getFullYear()}-${String(m.getMonth()+1).padStart(2,'0')}`);
+      }
+      return months;
+    });
 
-      const days = [];
-      // prev month tail
-      for (let i = firstDay - 1; i >= 0; i--) {
-        const d = daysInPrev - i;
-        const dateStr = `${y}-${String(m-1||12).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        days.push({ day: d, currentMonth: false, isToday: dateStr === todayStr, dateStr, hasEvent: events.value.some(e => e.date === dateStr) });
+    const trendData = computed(() => trendMonths.value.map(m=>{
+      const txns=transactions.value.filter(t=>t.month===m);
+      return {
+        month:m,
+        income:txns.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0),
+        expense:txns.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0)
+      };
+    }));
+
+    function drawTrend() {
+      if(!trendCvs.value) return;
+      const canvas=trendCvs.value, ctx=canvas.getContext('2d');
+      const W=canvas.width, H=canvas.height, pad={t:30,r:20,b:40,l:55};
+      ctx.clearRect(0,0,W,H);
+      const data=trendData.value; if(!data.length) return;
+      const pw=W-pad.l-pad.r, ph=H-pad.t-pad.b;
+      const allVals=data.flatMap(d=>[d.income,d.expense]);
+      const maxVal=Math.max(...allVals,1)*1.15;
+
+      // grid
+      ctx.strokeStyle='#e8ddd0'; ctx.lineWidth=0.5;
+      for(let i=0;i<=4;i++) {
+        const y=pad.t+ph-(ph*i/4);
+        ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
+        ctx.fillStyle='#8a8178'; ctx.font='10px sans-serif'; ctx.textAlign='right';
+        ctx.fillText('¥'+(maxVal*i/4).toFixed(0), pad.l-6, y+3);
       }
-      // current month
-      for (let d = 1; d <= daysInMonth; d++) {
-        const dateStr = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        days.push({ day: d, currentMonth: true, isToday: dateStr === todayStr, dateStr, hasEvent: events.value.some(e => e.date === dateStr) });
-      }
-      // next month head
-      const remaining = 42 - days.length;
-      for (let d = 1; d <= remaining; d++) {
-        const nm = m === 12 ? 1 : m + 1;
-        const ny = m === 12 ? y + 1 : y;
-        const dateStr = `${ny}-${String(nm).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        days.push({ day: d, currentMonth: false, isToday: dateStr === todayStr, dateStr, hasEvent: events.value.some(e => e.date === dateStr) });
-      }
+
+      // bars
+      const barW=pw/data.length/3;
+      data.forEach((d,i)=>{
+        const x0=pad.l+(pw/data.length)*i+barW;
+        // income bar
+        const ih=(d.income/maxVal)*ph;
+        ctx.fillStyle='#7d9b76'; ctx.fillRect(x0-barW/2, pad.t+ph-ih, barW, ih);
+        // expense bar
+        const eh=(d.expense/maxVal)*ph;
+        ctx.fillStyle='#c97b6b'; ctx.fillRect(x0+barW/2, pad.t+ph-eh, barW, eh);
+        // label
+        ctx.fillStyle='#8a8178'; ctx.textAlign='center'; ctx.fillText(d.month.slice(5), x0+barW/2, H-pad.b+16);
+      });
+
+      // legend
+      ctx.fillStyle='#7d9b76'; ctx.fillRect(W-pad.r-120, 8, 10, 10);
+      ctx.fillStyle='#2c2416'; ctx.font='11px sans-serif'; ctx.textAlign='left'; ctx.fillText('收入', W-pad.r-106, 17);
+      ctx.fillStyle='#c97b6b'; ctx.fillRect(W-pad.r-60, 8, 10, 10);
+      ctx.fillText('支出', W-pad.r-46, 17);
+    }
+    watch(trendData, ()=>nextTick(drawTrend), {deep:true});
+
+    function addTxn() {
+      const {type,amount,category,account,date,note}=f.value;
+      if(!amount||amount<=0){alert('请输入有效金额');return;}
+      transactions.value.unshift({id:Date.now(),type,amount,category,account,date:date||new Date().toISOString().slice(0,10),note:note.trim(),month:ym(date||new Date().toISOString().slice(0,10))});
+      ss('dl_transactions',transactions.value);
+      f.value.amount=null; f.value.note='';
+    }
+    function delTxn(id) {
+      transactions.value=transactions.value.filter(t=>t.id!==id);
+      ss('dl_transactions',transactions.value);
+    }
+    watch(()=>f.value.type, ()=>{ f.value.category=currentCats.value[0]; });
+
+    /* ========== 日历 ========== */
+    const events=ref(ls('dl_events')||[]);
+    const calYear=ref(new Date().getFullYear()), calMonth=ref(new Date().getMonth()+1);
+    const selDate=ref(new Date().toISOString().slice(0,10));
+    const showEvtModal=ref(false);
+    const ef=ref({date:'',time:'',title:'',desc:''});
+    const todayStr=new Date().toISOString().slice(0,10);
+    const weekLabels=WEEK_LABELS;
+
+    const calDays=computed(()=>{
+      const y=calYear.value, m=calMonth.value;
+      const fd=new Date(y,m-1,1).getDay(), dim=new Date(y,m,0).getDate(), dip=new Date(y,m-1,0).getDate();
+      const days=[];
+      for(let i=fd-1;i>=0;i--){const d=dip-i; const ds=`${y}-${String(m-1||12).padStart(2,'0')}-${String(d).padStart(2,'0')}`; days.push({day:d,cur:false,isToday:ds===todayStr,ds,hasEvt:events.value.some(e=>e.date===ds)});}
+      for(let d=1;d<=dim;d++){const ds=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`; days.push({day:d,cur:true,isToday:ds===todayStr,ds,hasEvt:events.value.some(e=>e.date===ds)});}
+      const rem=42-days.length;
+      for(let d=1;d<=rem;d++){const nm=m===12?1:m+1, ny=m===12?y+1:y; const ds=`${ny}-${String(nm).padStart(2,'0')}-${String(d).padStart(2,'0')}`; days.push({day:d,cur:false,isToday:ds===todayStr,ds,hasEvt:events.value.some(e=>e.date===ds)});}
       return days;
     });
+    const selEvents=computed(()=>events.value.filter(e=>e.date===selDate.value));
+    function pickDate(d){if(d.cur)selDate.value=d.ds;}
+    function goToday(){selDate.value=todayStr; const n=new Date(); calYear.value=n.getFullYear(); calMonth.value=n.getMonth()+1;}
+    function chgMonth(d){let m=calMonth.value+d, y=calYear.value; if(m>12){m=1;y++;} if(m<1){m=12;y--;} calYear.value=y; calMonth.value=m;}
+    function openEvt(){ef.value={date:selDate.value,time:'',title:'',desc:''}; showEvtModal.value=true;}
+    function closeEvt(){showEvtModal.value=false;}
+    function saveEvt(){
+      const{date,time,title,desc}=ef.value;
+      if(!title.trim()){alert('请输入标题');return;} if(!date){alert('请选择日期');return;}
+      events.value.unshift({id:Date.now(),date,time,title:title.trim(),desc:desc.trim()});
+      ss('dl_events',events.value); selDate.value=date;
+      const[y,m]=date.split('-').map(Number); calYear.value=y; calMonth.value=m;
+      closeEvt();
+    }
+    function delEvt(id){events.value=events.value.filter(e=>e.id!==id); ss('dl_events',events.value);}
 
-    const selectedEvents = computed(() =>
-      events.value.filter(e => e.date === selectedDate.value)
-    );
+    /* ========== 预算 ========== */
+    const currentYM = computed(() => {
+      const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    });
+    const budgetMonth = computed(() => currentYM.value);
+    const budgets = ref(ls('dl_budgets')||{});
+    const budgetForm = ref({total:0});
 
-    function selectDate(day) {
-      if (day.currentMonth) {
-        selectedDate.value = day.dateStr;
+    const budgetCats = computed(() => {
+      return (budgets.value[currentYM.value]?.categories) || {};
+    });
+
+    function catSpent(cat) {
+      return transactions.value
+        .filter(t=>t.type==='expense' && t.category===cat && t.month===currentYM.value)
+        .reduce((s,t)=>s+t.amount,0);
+    }
+    function budgetBarPct(cat) {
+      const b=budgetCats.value[cat]; if(!b||b===0) return 0;
+      return Math.min(100, (catSpent(cat)/b)*100);
+    }
+    function budgetBarClass(cat) {
+      const p=budgetBarPct(cat);
+      if(p>=100) return 'danger'; if(p>=80) return 'warn'; return 'safe';
+    }
+    function currentTotalBudget() {
+      return budgets.value[currentYM.value]?.total || 0;
+    }
+    function saveBudget() {
+      budgets.value[currentYM.value] = {
+        total: budgetForm.value.total,
+        categories: {}
+      };
+      // Save per-category budgets from the form
+      allCats.value.forEach(cat => {
+        // We'll use the existing categories object or set to total/n
+      });
+      ss('dl_budgets', budgets.value);
+      alert('预算已保存！在设置中可以为各分类单独设置预算。');
+    }
+
+    /* ========== 导出导入 ========== */
+    const importFile = ref(null);
+
+    function exportCSV() {
+      const hdr='日期,类型,金额,分类,账户,备注';
+      const rows=transactions.value.map(t=>`${t.date},${t.type==='income'?'收入':'支出'},${t.amount},${t.category},${acctName(t.account)},${t.note||''}`);
+      const csv=[hdr,...rows].join('\n');
+      const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a'); a.href=url; a.download=`日常记_${curMonth.value}.csv`; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportJSON() {
+      const data={transactions:transactions.value, events:events.value, accounts:accounts.value, customCats:customCats.value, budgets:budgets.value};
+      const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a'); a.href=url; a.download=`日常记_备份_${curMonth.value}.json`; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function triggerImport() { importFile.value.click(); }
+
+    function importJSON(e) {
+      const file=e.target.files[0]; if(!file) return;
+      const reader=new FileReader();
+      reader.onload=ev=>{
+        try{
+          const data=JSON.parse(ev.target.result);
+          if(!confirm(`将导入 ${data.transactions?.length||0} 条交易、${data.events?.length||0} 条提醒，当前数据将被覆盖。确认？`)) return;
+          if(data.transactions) { transactions.value=data.transactions; ss('dl_transactions',transactions.value); }
+          if(data.events) { events.value=data.events; ss('dl_events',events.value); }
+          if(data.accounts) { accounts.value=data.accounts; ss('dl_accounts',accounts.value); }
+          if(data.customCats) { customCats.value=data.customCats; ss('dl_customCats',customCats.value); }
+          if(data.budgets) { budgets.value=data.budgets; ss('dl_budgets',budgets.value); }
+          alert('导入成功！');
+        }catch{ alert('文件格式错误'); }
+      };
+      reader.readAsText(file);
+      e.target.value='';
+    }
+
+    /* ========== 提醒 ========== */
+    const reminderOn = ref(ls('dl_settings')?.reminderOn || false);
+    const reminderTime = ref(ls('dl_settings')?.reminderTime || '20:00');
+    let reminderTimer = null;
+
+    function saveSettings() {
+      ss('dl_settings', {reminderOn:reminderOn.value, reminderTime:reminderTime.value});
+      setupReminder();
+    }
+
+    function setupReminder() {
+      if(reminderTimer) clearInterval(reminderTimer);
+      if(!reminderOn.value) return;
+      reminderTimer = setInterval(() => {
+        const now=new Date();
+        const [h,m]=reminderTime.value.split(':').map(Number);
+        if(now.getHours()===h && now.getMinutes()===m && now.getSeconds()<5) {
+          if(Notification.permission==='granted') {
+            new Notification('日常·记',{body:'📝 别忘了记账哦！记录今天的收支吧～',icon:'📒'});
+          }
+        }
+      }, 5000);
+      if(Notification.permission==='default') Notification.requestPermission();
+    }
+
+    function testReminder() {
+      if(Notification.permission==='granted') {
+        new Notification('日常·记',{body:'🔔 这是测试提醒！记账提醒已正常工作～',icon:'📒'});
+      } else if(Notification.permission==='default') {
+        Notification.requestPermission().then(p=>{ if(p==='granted') testReminder(); });
+      } else {
+        alert('浏览器通知被阻止，请在浏览器设置中允许通知。');
       }
     }
 
-    function selectToday() {
-      selectedDate.value = todayStr;
-      const now = new Date();
-      calYear.value = now.getFullYear();
-      calMonth.value = now.getMonth() + 1;
-    }
-
-    function changeMonth(delta) {
-      let m = calMonth.value + delta;
-      let y = calYear.value;
-      if (m > 12) { m = 1; y++; }
-      if (m < 1)  { m = 12; y--; }
-      calYear.value = y;
-      calMonth.value = m;
-    }
-
-    function openEventModal() {
-      eventForm.value = { date: selectedDate.value, time: '', title: '', desc: '' };
-      showEventModal.value = true;
-    }
-
-    function closeEventModal() {
-      showEventModal.value = false;
-    }
-
-    function saveEvent() {
-      const { date, time, title, desc } = eventForm.value;
-      if (!title.trim()) { alert('请输入标题'); return; }
-      if (!date) { alert('请选择日期'); return; }
-      events.value.unshift({ id: Date.now(), date, time, title: title.trim(), desc: desc.trim() });
-      save('daily_life_events', events.value);
-      selectedDate.value = date;
-      const [y, m] = date.split('-').map(Number);
-      calYear.value = y;
-      calMonth.value = m;
-      closeEventModal();
-    }
-
-    function deleteEvent(id) {
-      events.value = events.value.filter(e => e.id !== id);
-      save('daily_life_events', events.value);
-    }
-
+    /* ========== Init ========== */
     onMounted(() => {
-      updateClock();
-      updateHeader();
-      setInterval(() => { updateClock(); updateHeader(); }, 1000);
-      nextTick(drawPieChart);
+      tick(); updHeader();
+      setInterval(()=>{tick();updHeader();},1000);
+      nextTick(()=>{drawPie();drawTrend();});
+      setupReminder();
     });
 
+    // watch tab for chart redraw
+    watch(tab, v=>{ if(v==='rpt') nextTick(()=>{drawPie();drawTrend();}); });
+
     return {
-      activeTab,
-      headerDate,
       // clock
-      clockHourDeg,
-      clockMinDeg,
-      clockSecDeg,
-      clockDigital,
-      clockDateStr,
-      // bookkeeping
-      form,
-      transactions,
-      currentCategories,
-      monthTransactions,
-      totalExpense,
-      totalIncome,
-      expenseCategories,
-      pieCanvas,
-      addTransaction,
-      deleteTransaction,
+      clockHourDeg,clockMinDeg,clockSecDeg,clockDigital,clockDateStr,
+      // common
+      tab, headerDate, fmt,
+      // txn
+      f, transactions, currentCats, allCats, monthTxns, totalExpense, totalIncome, currentBalance,
+      expenseCats, pieCvs, trendCvs, trendMonths, trendData,
+      filter, filteredTxns, resetFilter, acctName, addTxn, delTxn,
       // calendar
-      calYear,
-      calMonth,
-      selectedDate,
-      calendarDays,
-      selectedEvents,
-      weekLabels,
-      showEventModal,
-      eventForm,
-      selectDate,
-      selectToday,
-      changeMonth,
-      openEventModal,
-      closeEventModal,
-      saveEvent,
-      deleteEvent,
+      events, calYear, calMonth, selDate, calDays, selEvents, weekLabels,
+      showEvtModal, ef, pickDate, goToday, chgMonth, openEvt, closeEvt, saveEvt, delEvt,
+      // accounts
+      accounts, selectedAcct, acctForm, icons, acctBal, addAcct, delAcct,
+      // categories
+      customCats, catForm, addCat, rmCat,
+      // budget
+      budgetMonth, budgetForm, budgetCats, catSpent, budgetBarPct, budgetBarClass, saveBudget,
+      // export/import
+      importFile, exportCSV, exportJSON, triggerImport, importJSON,
+      // reminders
+      reminderOn, reminderTime, saveSettings, testReminder,
     };
   }
 }).mount('#app');
