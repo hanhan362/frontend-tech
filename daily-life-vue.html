@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日常 · 记账与提醒</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+  :root {
+    --cream: #faf5ed;
+    --brown: #3d2c1e;
+    --brown-light: #8b7355;
+    --sage: #7d9b76;
+    --sage-light: #e8f0e5;
+    --coral: #c97b6b;
+    --coral-light: #fce8e3;
+    --sky: #6b8db5;
+    --sky-light: #e8eff7;
+    --ink: #2c2416;
+    --ink-light: #8a8178;
+    --divider: #e8ddd0;
+    --shadow: 0 1px 3px rgba(61,44,30,0.06), 0 4px 12px rgba(61,44,30,0.04);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;
+    background: linear-gradient(135deg, #f7f0e6 0%, #faf5ed 50%, #f5ede0 100%);
+    min-height: 100vh;
+    color: var(--ink);
+    display: flex;
+    justify-content: center;
+    padding: 24px 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app-wrapper {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Header */
+  .app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px;
+  }
+  .app-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--brown);
+    letter-spacing: 0.5px;
+  }
+  .app-title span { color: var(--sage); }
+  .date-display {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px;
+    color: var(--ink-light);
+    letter-spacing: 1px;
+  }
+
+  /* Tabs */
+  .tab-nav {
+    display: flex;
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 4px;
+    box-shadow: var(--shadow);
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 12px 24px;
+    border: none;
+    background: transparent;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink-light);
+    cursor: pointer;
+    border-radius: calc(var(--radius) - 4px);
+    transition: all 0.25s;
+    letter-spacing: 0.5px;
+  }
+  .tab-btn.active {
+    background: linear-gradient(135deg, #faf5ed, #f5ede0);
+    color: var(--brown);
+    font-weight: 600;
+    box-shadow: 0 1px 4px rgba(61,44,30,0.06);
+  }
+  .tab-btn:hover:not(.active) { color: var(--brown); background: rgba(245,237,224,0.4); }
+  .tab-icon { margin-right: 6px; }
+
+  /* Summary Cards */
+  .summary-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .summary-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--divider);
+    position: relative;
+    overflow: hidden;
+  }
+  .summary-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: 3px 0 0 3px;
+  }
+  .summary-card.expense::after { background: var(--coral); }
+  .summary-card.income::after  { background: var(--sage); }
+  .summary-card.balance::after { background: var(--sky); }
+  .summary-label { font-size: 12px; color: var(--ink-light); letter-spacing: 1px; margin-bottom: 6px; }
+  .summary-amount {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 26px;
+    font-weight: 600;
+  }
+  .summary-amount.expense { color: var(--coral); }
+  .summary-amount.income  { color: var(--sage); }
+  .summary-amount.balance { color: var(--sky); }
+
+  /* Cards */
+  .card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--divider);
+  }
+  .card-header {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--brown);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dot { width:6px; height:6px; border-radius:50%; display:inline-block; }
+  .dot.expense { background: var(--coral); }
+  .dot.income  { background: var(--sage); }
+  .dot.balance { background: var(--sky); }
+
+  /* Form */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto auto;
+    gap: 10px;
+    align-items: end;
+  }
+  .form-row-2 { grid-template-columns: 1fr 1fr; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group label { font-size: 12px; color: var(--ink-light); letter-spacing: 0.5px; }
+
+  input, select, textarea {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 14px;
+    padding: 10px 12px;
+    border: 1px solid var(--divider);
+    border-radius: var(--radius-sm);
+    background: #fdfaf5;
+    color: var(--ink);
+    outline: none;
+    transition: all 0.2s;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--sage);
+    box-shadow: 0 0 0 3px rgba(125,155,118,0.08);
+    background: #fff;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .btn-primary { background: var(--sage); color: #fff; }
+  .btn-primary:hover { background: #6d8a66; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(125,155,118,0.25); }
+  .btn-outline { background: transparent; border: 1px solid var(--divider); color: var(--ink-light); }
+  .btn-outline:hover { background: #faf5ed; border-color: var(--brown-light); }
+  .btn-sm { padding: 6px 14px; font-size: 12px; }
+  .btn-danger { background: transparent; color: var(--coral); padding: 4px 8px; font-size: 12px; }
+  .btn-danger:hover { background: var(--coral-light); border-radius: 4px; }
+
+  /* Transaction List */
+  .txn-list { max-height: 340px; overflow-y: auto; }
+  .txn-list::-webkit-scrollbar { width: 4px; }
+  .txn-list::-webkit-scrollbar-thumb { background: var(--divider); border-radius: 2px; }
+  .txn-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--divider);
+  }
+  .txn-item:last-child { border-bottom: none; }
+  .txn-left { display: flex; align-items: center; gap: 12px; }
+  .txn-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .txn-icon.expense { background: var(--coral-light); }
+  .txn-icon.income  { background: var(--sage-light); }
+  .txn-info { display: flex; flex-direction: column; gap: 2px; }
+  .txn-category { font-size: 14px; font-weight: 500; }
+  .txn-meta { font-size: 12px; color: var(--ink-light); }
+  .txn-note { font-size: 12px; color: var(--ink-light); font-style: italic; }
+  .txn-right { text-align: right; display: flex; flex-direction: column; gap: 2px; align-items: flex-end; }
+  .txn-amount { font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 600; }
+  .txn-amount.expense { color: var(--coral); }
+  .txn-amount.income  { color: var(--sage); }
+
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--ink-light); font-size: 14px; }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.5; }
+
+  /* Chart */
+  .chart-area { display: flex; align-items: center; gap: 20px; padding: 8px 0; }
+  .chart-legend { display: flex; flex-direction: column; gap: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+  .legend-amount { font-weight: 500; margin-left: 4px; }
+
+  /* Calendar */
+  .calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .calendar-month {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--brown);
+  }
+  .calendar-nav { display: flex; gap: 6px; }
+  .calendar-nav button {
+    width: 32px; height: 32px;
+    border: 1px solid var(--divider);
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .calendar-nav button:hover { background: var(--sage-light); border-color: var(--sage); color: var(--sage); }
+  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .calendar-day-label { text-align: center; font-size: 11px; color: var(--ink-light); padding: 6px 0; letter-spacing: 0.5px; }
+  .calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+    color: var(--ink);
+  }
+  .calendar-day:hover { background: var(--sage-light); }
+  .calendar-day.today { background: var(--brown); color: #fff; font-weight: 600; }
+  .calendar-day.other { color: #d5cdc0; }
+  .calendar-day.has-event::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--coral);
+  }
+  .calendar-day.today.has-event::after { background: #fff; }
+  .calendar-day.selected { box-shadow: 0 0 0 2px var(--sage); }
+
+  /* Events */
+  .event-list { max-height: 200px; overflow-y: auto; }
+  .event-list::-webkit-scrollbar { width: 4px; }
+  .event-list::-webkit-scrollbar-thumb { background: var(--divider); border-radius: 2px; }
+  .event-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--divider); }
+  .event-item:last-child { border-bottom: none; }
+  .event-time { font-family: 'Noto Serif SC', serif; font-size: 13px; color: var(--sky); font-weight: 600; min-width: 48px; padding-top: 2px; }
+  .event-info { flex: 1; }
+  .event-title-text { font-size: 14px; font-weight: 500; }
+  .event-desc { font-size: 12px; color: var(--ink-light); margin-top: 2px; }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(44,36,22,0.4);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 24px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 2px 8px rgba(61,44,30,0.08), 0 8px 24px rgba(61,44,30,0.06);
+  }
+  .modal h3 { font-family: 'Noto Serif SC', serif; font-size: 18px; color: var(--brown); margin-bottom: 16px; }
+  .modal .form-group { margin-bottom: 12px; }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+  /* Animations */
+  .fade-enter-active, .fade-leave-active { transition: opacity 0.3s; }
+  .fade-enter-from, .fade-leave-to { opacity: 0; }
+  .slide-enter-active, .slide-leave-active { transition: all 0.3s ease; }
+  .slide-enter-from { opacity: 0; transform: translateY(16px); }
+  .slide-leave-to { opacity: 0; transform: translateY(-16px); }
+
+  @media (max-width: 768px) {
+    .form-row { grid-template-columns: 1fr 1fr; }
+    .form-row .btn-primary { grid-column: 1 / -1; }
+    .summary-row { grid-template-columns: 1fr; }
+    .chart-area { flex-direction: column; align-items: center; }
+    .calendar-grid { gap: 2px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="app-wrapper">
+    <!-- Header -->
+    <div class="app-header">
+      <div class="app-title">日常<span>·记</span></div>
+      <div class="date-display">{{ headerDate }}</div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-nav">
+      <button class="tab-btn" :class="{ active: activeTab === 'bookkeeping' }" @click="activeTab = 'bookkeeping'">
+        <span class="tab-icon">📒</span> 记账
+      </button>
+      <button class="tab-btn" :class="{ active: activeTab === 'calendar' }" @click="activeTab = 'calendar'">
+        <span class="tab-icon">📅</span> 日历提醒
+      </button>
+    </div>
+
+    <!-- ===== 记账面板 ===== -->
+    <template v-if="activeTab === 'bookkeeping'">
+      <!-- Summary Cards -->
+      <div class="summary-row">
+        <div class="summary-card expense">
+          <div class="summary-label">本月支出</div>
+          <div class="summary-amount expense">¥{{ totalExpense.toFixed(2) }}</div>
+        </div>
+        <div class="summary-card income">
+          <div class="summary-label">本月收入</div>
+          <div class="summary-amount income">¥{{ totalIncome.toFixed(2) }}</div>
+        </div>
+        <div class="summary-card balance">
+          <div class="summary-label">本月结余</div>
+          <div class="summary-amount balance">¥{{ (totalIncome - totalExpense).toFixed(2) }}</div>
+        </div>
+      </div>
+
+      <!-- Add Form -->
+      <div class="card">
+        <div class="card-header"><span class="dot expense"></span> 记一笔</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>类型</label>
+            <select v-model="form.type">
+              <option value="expense">支出</option>
+              <option value="income">收入</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>金额</label>
+            <input type="number" v-model.number="form.amount" placeholder="0.00" step="0.01" min="0.01" @keyup.enter="addTransaction">
+          </div>
+          <div class="form-group">
+            <label>分类</label>
+            <select v-model="form.category">
+              <option v-for="c in currentCategories" :key="c" :value="c">{{ c }}</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" @click="addTransaction">✓ 记录</button>
+        </div>
+        <div class="form-row form-row-2" style="margin-top:10px;">
+          <div class="form-group">
+            <label>日期</label>
+            <input type="date" v-model="form.date">
+          </div>
+          <div class="form-group">
+            <label>备注（可选）</label>
+            <input type="text" v-model="form.note" placeholder="例如：午餐外卖">
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart + List -->
+      <div style="display:grid; grid-template-columns: 1fr 1.2fr; gap:16px;">
+        <div class="card">
+          <div class="card-header"><span class="dot expense"></span> 支出分类</div>
+          <div v-if="expenseCategories.length === 0" class="empty-state">
+            <div class="empty-icon">📊</div>
+            <div>暂无支出数据</div>
+          </div>
+          <div v-else class="chart-area">
+            <canvas ref="pieCanvas" width="170" height="170"></canvas>
+            <div class="chart-legend">
+              <div class="legend-item" v-for="c in expenseCategories" :key="c.name">
+                <span class="legend-dot" :style="{ background: c.color }"></span>
+                <span>{{ c.name }}</span>
+                <span class="legend-amount">¥{{ c.total.toFixed(2) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="dot expense"></span> 本月明细</div>
+          <div class="txn-list">
+            <TransitionGroup name="slide" tag="div">
+              <div v-if="monthTransactions.length === 0" class="empty-state" key="empty">
+                <div class="empty-icon">📝</div>
+                <div>还没有记录，开始记一笔吧</div>
+              </div>
+              <div v-for="t in monthTransactions" :key="t.id" class="txn-item">
+                <div class="txn-left">
+                  <div class="txn-icon" :class="t.type">{{ t.category.slice(0, 2) }}</div>
+                  <div class="txn-info">
+                    <div class="txn-category">{{ t.category }}</div>
+                    <div class="txn-meta">{{ t.date }}<span v-if="t.note"> · </span></div>
+                    <div class="txn-note" v-if="t.note">{{ t.note }}</div>
+                  </div>
+                </div>
+                <div class="txn-right">
+                  <div class="txn-amount" :class="t.type">{{ t.type === 'income' ? '+' : '-' }}¥{{ t.amount.toFixed(2) }}</div>
+                  <button class="btn btn-danger" @click="deleteTransaction(t.id)">删除</button>
+                </div>
+              </div>
+            </TransitionGroup>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- ===== 日历面板 ===== -->
+    <template v-if="activeTab === 'calendar'">
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+        <div class="card">
+          <div class="calendar-header">
+            <span class="calendar-month">{{ calYear }}年{{ calMonth }}月</span>
+            <div class="calendar-nav">
+              <button @click="changeMonth(-1)">◀</button>
+              <button @click="changeMonth(1)">▶</button>
+            </div>
+          </div>
+          <div class="calendar-grid">
+            <div class="calendar-day-label" v-for="d in weekLabels" :key="d">{{ d }}</div>
+            <div
+              v-for="(day, i) in calendarDays" :key="i"
+              class="calendar-day"
+              :class="{
+                'other': !day.currentMonth,
+                'today': day.isToday,
+                'selected': day.dateStr === selectedDate,
+                'has-event': day.hasEvent
+              }"
+              @click="selectDate(day)">
+              {{ day.day }}
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="dot balance"></span>
+            <span>{{ selectedDate }} 提醒</span>
+          </div>
+          <div class="event-list">
+            <div v-if="selectedEvents.length === 0" class="empty-state">
+              <div class="empty-icon">🔔</div>
+              <div>今天没有安排</div>
+            </div>
+            <div v-for="e in selectedEvents" :key="e.id" class="event-item">
+              <div class="event-time">{{ e.time || '全天' }}</div>
+              <div class="event-info">
+                <div class="event-title-text">{{ e.title }}</div>
+                <div class="event-desc" v-if="e.desc">{{ e.desc }}</div>
+              </div>
+              <button class="btn btn-danger" @click="deleteEvent(e.id)">删除</button>
+            </div>
+          </div>
+          <div style="margin-top: 12px; display: flex; gap: 8px;">
+            <button class="btn btn-primary btn-sm" @click="openEventModal">+ 添加提醒</button>
+            <button class="btn btn-outline btn-sm" @click="selectToday">回到今天</button>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <!-- Event Modal -->
+  <Teleport to="body">
+    <div v-if="showEventModal" class="modal-overlay" @click.self="closeEventModal">
+      <div class="modal">
+        <h3>添加提醒</h3>
+        <div class="form-group">
+          <label>日期</label>
+          <input type="date" v-model="eventForm.date">
+        </div>
+        <div class="form-group">
+          <label>时间（可选）</label>
+          <input type="time" v-model="eventForm.time">
+        </div>
+        <div class="form-group">
+          <label>标题</label>
+          <input type="text" v-model="eventForm.title" placeholder="例如：交房租">
+        </div>
+        <div class="form-group">
+          <label>备注（可选）</label>
+          <textarea v-model="eventForm.desc" rows="2" placeholder="补充说明..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-outline" @click="closeEventModal">取消</button>
+          <button class="btn btn-primary" @click="saveEvent">保存</button>
+        </div>
+      </div>
+    </div>
+  </Teleport>
+</div>
+
+<script>
+const { createApp, ref, computed, watch, onMounted, nextTick, TransitionGroup, Teleport } = Vue;
+
+/* ---- 分类常量 ---- */
+const CAT_EXPENSE = ['🍔 餐饮','🚇 交通','🛒 购物','🏠 居住','🎬 娱乐','💊 医疗','📚 教育','📦 其他'];
+const CAT_INCOME  = ['💼 薪资','🎁 礼金','📦 其他'];
+const CAT_COLORS = {
+  '🍔 餐饮':'#c97b6b','🚇 交通':'#d4a373','🛒 购物':'#e0a899','🏠 居住':'#b5838d',
+  '🎬 娱乐':'#8b7355','💊 医疗':'#a98467','📚 教育':'#6c584c','💼 薪资':'#7d9b76',
+  '🎁 礼金':'#a3b18a','📦 其他':'#adc4b5'
+};
+const WEEK_LABELS = ['日','一','二','三','四','五','六'];
+
+/* ---- localStorage helpers ---- */
+function load(key) {
+  try { return JSON.parse(localStorage.getItem(key)) || []; }
+  catch { return []; }
+}
+function save(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+createApp({
+  components: { TransitionGroup, Teleport },
+
+  setup() {
+    /* ============ 共享状态 ============ */
+    const activeTab = ref('bookkeeping');
+    const headerDate = ref('');
+    const updateHeader = () => {
+      const d = new Date();
+      const w = ['日','一','二','三','四','五','六'];
+      headerDate.value = `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 星期${w[d.getDay()]}`;
+    };
+
+    /* ============ 记账状态 ============ */
+    const transactions = ref(load('daily_life_transactions'));
+    const form = ref({
+      type: 'expense',
+      amount: null,
+      category: '🍔 餐饮',
+      date: new Date().toISOString().slice(0,10),
+      note: ''
+    });
+    const pieCanvas = ref(null);
+
+    const currentMonth = computed(() => {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    });
+
+    const currentCategories = computed(() => form.value.type === 'income' ? CAT_INCOME : CAT_EXPENSE);
+
+    const monthTransactions = computed(() =>
+      transactions.value.filter(t => t.month === currentMonth.value)
+    );
+
+    const totalExpense = computed(() =>
+      monthTransactions.value.filter(t => t.type === 'expense').reduce((s,t) => s + t.amount, 0)
+    );
+
+    const totalIncome = computed(() =>
+      monthTransactions.value.filter(t => t.type === 'income').reduce((s,t) => s + t.amount, 0)
+    );
+
+    const expenseCategories = computed(() => {
+      const map = {};
+      monthTransactions.value.filter(t => t.type === 'expense').forEach(t => {
+        map[t.category] = (map[t.category] || 0) + t.amount;
+      });
+      return Object.entries(map).map(([name, total]) => ({
+        name, total, color: CAT_COLORS[name] || '#ccc'
+      }));
+    });
+
+    function drawPieChart() {
+      if (!pieCanvas.value) return;
+      const canvas = pieCanvas.value;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      const cx = w/2, cy = h/2, r = 70;
+      ctx.clearRect(0, 0, w, h);
+
+      const cats = expenseCategories.value;
+      if (cats.length === 0) return;
+
+      const total = cats.reduce((s,c) => s + c.total, 0);
+      let angle = -Math.PI / 2;
+
+      cats.forEach(cat => {
+        const slice = (cat.total / total) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, r, angle, angle + slice);
+        ctx.closePath();
+        ctx.fillStyle = cat.color;
+        ctx.fill();
+        angle += slice;
+      });
+
+      // center hole → donut
+      ctx.beginPath();
+      ctx.arc(cx, cy, 42, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+    }
+
+    watch(expenseCategories, () => nextTick(drawPieChart), { deep: true });
+
+    function addTransaction() {
+      const { type, amount, category, date, note } = form.value;
+      if (!amount || amount <= 0) { alert('请输入有效金额'); return; }
+      transactions.value.unshift({
+        id: Date.now(),
+        type, amount, category,
+        date: date || new Date().toISOString().slice(0,10),
+        note: note.trim(),
+        month: (date || new Date().toISOString().slice(0,10)).substring(0,7)
+      });
+      save('daily_life_transactions', transactions.value);
+      form.value.amount = null;
+      form.value.note = '';
+    }
+
+    function deleteTransaction(id) {
+      transactions.value = transactions.value.filter(t => t.id !== id);
+      save('daily_life_transactions', transactions.value);
+    }
+
+    // 切换类型时自动切分类
+    watch(() => form.value.type, () => {
+      form.value.category = currentCategories.value[0];
+    });
+
+    /* ============ 日历状态 ============ */
+    const events = ref(load('daily_life_events'));
+    const calYear = ref(new Date().getFullYear());
+    const calMonth = ref(new Date().getMonth() + 1);
+    const selectedDate = ref(new Date().toISOString().slice(0,10));
+    const showEventModal = ref(false);
+    const eventForm = ref({ date: '', time: '', title: '', desc: '' });
+
+    const weekLabels = WEEK_LABELS;
+    const todayStr = new Date().toISOString().slice(0,10);
+
+    const calendarDays = computed(() => {
+      const y = calYear.value, m = calMonth.value;
+      const firstDay = new Date(y, m-1, 1).getDay();
+      const daysInMonth = new Date(y, m, 0).getDate();
+      const daysInPrev = new Date(y, m-1, 0).getDate();
+
+      const days = [];
+      // prev month tail
+      for (let i = firstDay - 1; i >= 0; i--) {
+        const d = daysInPrev - i;
+        const dateStr = `${y}-${String(m-1||12).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        days.push({ day: d, currentMonth: false, isToday: dateStr === todayStr, dateStr, hasEvent: events.value.some(e => e.date === dateStr) });
+      }
+      // current month
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        days.push({ day: d, currentMonth: true, isToday: dateStr === todayStr, dateStr, hasEvent: events.value.some(e => e.date === dateStr) });
+      }
+      // next month head
+      const remaining = 42 - days.length;
+      for (let d = 1; d <= remaining; d++) {
+        const nm = m === 12 ? 1 : m + 1;
+        const ny = m === 12 ? y + 1 : y;
+        const dateStr = `${ny}-${String(nm).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        days.push({ day: d, currentMonth: false, isToday: dateStr === todayStr, dateStr, hasEvent: events.value.some(e => e.date === dateStr) });
+      }
+      return days;
+    });
+
+    const selectedEvents = computed(() =>
+      events.value.filter(e => e.date === selectedDate.value)
+    );
+
+    function selectDate(day) {
+      if (day.currentMonth) {
+        selectedDate.value = day.dateStr;
+      }
+    }
+
+    function selectToday() {
+      selectedDate.value = todayStr;
+      const now = new Date();
+      calYear.value = now.getFullYear();
+      calMonth.value = now.getMonth() + 1;
+    }
+
+    function changeMonth(delta) {
+      let m = calMonth.value + delta;
+      let y = calYear.value;
+      if (m > 12) { m = 1; y++; }
+      if (m < 1)  { m = 12; y--; }
+      calYear.value = y;
+      calMonth.value = m;
+    }
+
+    function openEventModal() {
+      eventForm.value = { date: selectedDate.value, time: '', title: '', desc: '' };
+      showEventModal.value = true;
+    }
+
+    function closeEventModal() {
+      showEventModal.value = false;
+    }
+
+    function saveEvent() {
+      const { date, time, title, desc } = eventForm.value;
+      if (!title.trim()) { alert('请输入标题'); return; }
+      if (!date) { alert('请选择日期'); return; }
+      events.value.unshift({ id: Date.now(), date, time, title: title.trim(), desc: desc.trim() });
+      save('daily_life_events', events.value);
+      selectedDate.value = date;
+      const [y, m] = date.split('-').map(Number);
+      calYear.value = y;
+      calMonth.value = m;
+      closeEventModal();
+    }
+
+    function deleteEvent(id) {
+      events.value = events.value.filter(e => e.id !== id);
+      save('daily_life_events', events.value);
+    }
+
+    onMounted(() => {
+      updateHeader();
+      setInterval(updateHeader, 60000);
+      nextTick(drawPieChart);
+    });
+
+    return {
+      activeTab,
+      headerDate,
+      // bookkeeping
+      form,
+      transactions,
+      currentCategories,
+      monthTransactions,
+      totalExpense,
+      totalIncome,
+      expenseCategories,
+      pieCanvas,
+      addTransaction,
+      deleteTransaction,
+      // calendar
+      calYear,
+      calMonth,
+      selectedDate,
+      calendarDays,
+      selectedEvents,
+      weekLabels,
+      showEventModal,
+      eventForm,
+      selectDate,
+      selectToday,
+      changeMonth,
+      openEventModal,
+      closeEventModal,
+      saveEvent,
+      deleteEvent,
+    };
+  }
+}).mount('#app');
+</script>
+</body>
+</html>
