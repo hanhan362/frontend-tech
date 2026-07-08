@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商品图文选购</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<style>
+  :root {
+    --red: #e74c3c; --red-light: #fdecea;
+    --gray: #bdc3c7; --gray-light: #f5f6fa;
+    --ink: #2c3e50; --ink-light: #7f8c8d;
+    --gold: #f39c12; --gold-light: #fef9e7;
+    --green: #27ae60; --white: #fff;
+    --shadow: 0 2px 12px rgba(0,0,0,0.06);
+    --shadow-lg: 0 6px 24px rgba(0,0,0,0.1);
+    --radius: 12px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    padding: 30px 16px;
+    display: flex;
+    justify-content: center;
+  }
+  .container { width:100%; max-width:1000px; }
+  h1 {
+    text-align: center;
+    font-size: 26px;
+    color: var(--ink);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 13px;
+    color: var(--ink-light);
+    margin-bottom: 28px;
+  }
+
+  /* 商品网格 */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  /* 商品卡片 */
+  .product-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 2px solid var(--gray);
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+  }
+  .product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .product-img-wrap {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: #e8eaed;
+  }
+  .product-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .product-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--red);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 14px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .product-badge.sold-out {
+    background: var(--gray);
+  }
+
+  .product-body { padding:16px; display:flex; flex-direction:column; gap:10px; flex:1; }
+  .product-name { font-size:17px; font-weight:600; color:var(--ink); }
+  .product-price { font-size:22px; font-weight:700; color:var(--red); }
+  .product-price .unit { font-size:14px; font-weight:400; }
+  .product-desc { font-size:12px; color:var(--ink-light); line-height:1.5; }
+
+  /* 评分行 */
+  .rating-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .stars { color: var(--gold); font-size: 16px; letter-spacing: 2px; }
+  .rating-val { font-weight:600; font-size:14px; color:var(--ink); }
+  .rating-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 4px;
+    border-radius: 2px;
+    background: #ddd;
+    outline: none;
+  }
+  .rating-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  /* 数量行 */
+  .qty-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--ink-light);
+  }
+  .qty-btn {
+    width: 30px; height: 30px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: var(--white);
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .qty-btn:hover { background: #f0f0f0; border-color: #bbb; }
+  .qty-input {
+    width: 50px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 5px;
+    font-size: 14px;
+    outline: none;
+  }
+  .qty-input:focus { border-color: var(--red); }
+
+  /* 底部操作 */
+  .card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+  }
+  .btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .btn-like {
+    background: var(--red-light);
+    color: var(--red);
+    flex: 0;
+  }
+  .btn-like:hover { background: #fadbd8; }
+  .btn-like.liked { background: var(--red); color: #fff; }
+  .btn-buy {
+    background: var(--red);
+    color: #fff;
+    flex: 1;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .btn-buy:hover { background: #c0392b; }
+  .btn-buy:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  /* 底部选中栏 */
+  .select-bar {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .select-bar label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-light);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+  .select-bar input[type="radio"] {
+    accent-color: var(--red);
+    width: 16px; height: 16px;
+  }
+  .selected-info {
+    margin-left: auto;
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s;
+  }
+  .modal {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+    animation: slideUp 0.25s ease;
+  }
+  .modal .check-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: #e8f8f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 28px;
+  }
+  .modal h3 { font-size: 20px; color: var(--ink); margin-bottom: 12px; }
+  .modal .order-detail {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 14px;
+    margin: 14px 0;
+    text-align: left;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--ink);
+  }
+  .modal .order-detail strong { color: var(--red); }
+  .btn-close {
+    margin-top: 8px;
+    padding: 10px 40px;
+    background: var(--red);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-close:hover { background: #c0392b; }
+
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+  @media (max-width:600px) {
+    .product-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 22px; }
+    .select-bar { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .selected-info { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="container">
+    <h1>🛒 品质好物</h1>
+    <p class="subtitle">精选商品 · 滑动评分 · 一键下单</p>
+
+    <!-- 商品网格 -->
+    <div class="product-grid">
+      <div
+        v-for="product in products"
+        :key="product.id"
+        class="product-card"
+        :style="{ borderColor: product.rating >= 4 ? '#e74c3c' : '#bdc3c7' }"
+      >
+        <!-- 图片 -->
+        <div class="product-img-wrap">
+          <img :src="product.image" :alt="product.name">
+          <span class="product-badge" :class="{ 'sold-out': product.stock === 0 }">
+            {{ product.stock === 0 ? '已售罄' : '热卖' }}
+          </span>
+        </div>
+
+        <!-- 内容 -->
+        <div class="product-body">
+          <div class="product-name">{{ product.name }}</div>
+          <div class="product-price">
+            <span class="unit">¥</span>{{ product.price.toFixed(2) }}
+          </div>
+          <div class="product-desc">{{ product.desc }}</div>
+
+          <!-- 评分滑块 v-model -->
+          <div class="rating-row">
+            <span class="stars">{{ starStr(product.rating) }}</span>
+            <span class="rating-val">{{ product.rating.toFixed(1) }}</span>
+            <input
+              type="range"
+              class="rating-slider"
+              min="0" max="5" step="0.5"
+              v-model.number="product.rating"
+            >
+          </div>
+
+          <!-- 购买数量 v-model -->
+          <div class="qty-row">
+            <span>数量：</span>
+            <button class="qty-btn" @click="decreaseQty(product)">−</button>
+            <input
+              type="number"
+              class="qty-input"
+              v-model.number="product.qty"
+              min="1"
+            >
+            <button class="qty-btn" @click="increaseQty(product)">+</button>
+            <span style="font-size:11px;color:var(--ink-light);">库存 {{ product.stock }}</span>
+          </div>
+
+          <!-- 操作按钮 -->
+          <div class="card-actions">
+            <button class="btn btn-like" :class="{ liked: product.liked }" @click="toggleLike(product)">
+              {{ product.liked ? '❤️' : '🤍' }} {{ product.likes }}
+            </button>
+            <button
+              class="btn btn-buy"
+              :disabled="product.stock === 0"
+              @click="buyProduct(product)"
+            >
+              {{ product.stock === 0 ? '补货中' : '🛍 立即购买' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部单选框 v-model 绑定选中商品 id -->
+    <div class="select-bar">
+      <span style="font-weight:600;font-size:14px;color:var(--ink);">⭐ 收藏此商品：</span>
+      <label v-for="product in products" :key="'r'+product.id">
+        <input type="radio" :value="product.id" v-model="selectedId">
+        {{ product.name }}
+      </label>
+      <span class="selected-info" v-if="selectedProduct">
+        已选：{{ selectedProduct.name }} · 评分 {{ selectedProduct.rating.toFixed(1) }}
+      </span>
+    </div>
+  </div>
+
+  <!-- 购买弹窗 -->
+  <Teleport to="body">
+    <div v-if="showModal" class="modal-overlay" @click.self="showModal=false">
+      <div class="modal">
+        <div class="check-icon">✅</div>
+        <h3>下单成功！</h3>
+        <div class="order-detail">
+          <div>📦 商品：<strong>{{ modalProduct?.name }}</strong></div>
+          <div>📊 评分：<strong>{{ modalProduct?.rating.toFixed(1) }} 分</strong></div>
+          <div>🔢 数量：<strong>{{ modalProduct?.qty }} 件</strong></div>
+          <div>💰 合计：<strong>¥{{ modalTotal.toFixed(2) }}</strong></div>
+        </div>
+        <button class="btn-close" @click="showModal=false">知道了</button>
+      </div>
+    </div>
+  </Teleport>
+</div>
+
+<script>
+const { createApp, ref, computed, Teleport } = Vue;
+
+createApp({
+  components: { Teleport },
+
+  setup() {
+    /* ======== 商品数据 ======== */
+    const products = ref([
+      {
+        id: 1,
+        name: '极简真皮双肩包',
+        price: 299.00,
+        desc: '头层牛皮 · 大容量 · 防泼水 · 商务通勤两用',
+        image: 'https://picsum.photos/seed/bag/400/300',
+        rating: 4.5,
+        stock: 23,
+        likes: 128,
+        liked: false,
+        qty: 1,
+      },
+      {
+        id: 2,
+        name: '无线降噪耳机 Pro',
+        price: 599.00,
+        desc: '主动降噪 · 40h续航 · Hi-Res音质 · 佩戴舒适',
+        image: 'https://picsum.photos/seed/headphone/400/300',
+        rating: 4.8,
+        stock: 56,
+        likes: 341,
+        liked: false,
+        qty: 1,
+      },
+      {
+        id: 3,
+        name: '复古机械键盘',
+        price: 459.00,
+        desc: '樱桃轴体 · PBT键帽 · RGB背光 · 87键紧凑布局',
+        image: 'https://picsum.photos/seed/keyboard/400/300',
+        rating: 3.5,
+        stock: 0,
+        likes: 89,
+        liked: false,
+        qty: 1,
+      },
+      {
+        id: 4,
+        name: '智能运动手表',
+        price: 899.00,
+        desc: '血氧监测 · GPS定位 · 14天续航 · 50米防水',
+        image: 'https://picsum.photos/seed/watch/400/300',
+        rating: 4.2,
+        stock: 12,
+        likes: 205,
+        liked: false,
+        qty: 1,
+      },
+      {
+        id: 5,
+        name: '便携咖啡随行杯',
+        price: 129.00,
+        desc: '316不锈钢 · 真空双层 · 12h保温 · 380ml',
+        image: 'https://picsum.photos/seed/cup/400/300',
+        rating: 4.6,
+        stock: 88,
+        likes: 67,
+        liked: false,
+        qty: 1,
+      },
+      {
+        id: 6,
+        name: '轻薄羽绒马甲',
+        price: 259.00,
+        desc: '90%白鹅绒 · 可收纳 · 防风立领 · 三色可选',
+        image: 'https://picsum.photos/seed/jacket/400/300',
+        rating: 3.8,
+        stock: 5,
+        likes: 43,
+        liked: false,
+        qty: 1,
+      },
+    ]);
+
+    /* ======== 单选框选中 id ======== */
+    const selectedId = ref(null);
+
+    const selectedProduct = computed(() =>
+      products.value.find(p => p.id === selectedId.value) || null
+    );
+
+    /* ======== 弹窗状态 ======== */
+    const showModal = ref(false);
+    const modalProduct = ref(null);
+
+    const modalTotal = computed(() => {
+      if (!modalProduct.value) return 0;
+      return modalProduct.value.price * modalProduct.value.qty;
+    });
+
+    /* ======== 评分转星星 ======== */
+    function starStr(rating) {
+      const full = Math.floor(rating);
+      const half = rating - full >= 0.5 ? 1 : 0;
+      const empty = 5 - full - half;
+      return '★'.repeat(full) + (half ? '☆' : '') + '☆'.repeat(empty);
+    }
+
+    /* ======== 数量操作 ======== */
+    function increaseQty(product) {
+      if (product.qty < product.stock) {
+        product.qty++;
+      }
+    }
+    function decreaseQty(product) {
+      if (product.qty > 1) {
+        product.qty--;
+      }
+    }
+
+    /* ======== 点赞 ======== */
+    function toggleLike(product) {
+      product.liked = !product.liked;
+      product.likes += product.liked ? 1 : -1;
+    }
+
+    /* ======== 购买 ======== */
+    function buyProduct(product) {
+      if (product.stock === 0) return;
+      modalProduct.value = product;
+      showModal.value = true;
+    }
+
+    return {
+      products,
+      selectedId,
+      selectedProduct,
+      showModal,
+      modalProduct,
+      modalTotal,
+      starStr,
+      increaseQty,
+      decreaseQty,
+      toggleLike,
+      buyProduct,
+    };
+  }
+}).mount('#app');
+</script>
+</body>
+</html>
